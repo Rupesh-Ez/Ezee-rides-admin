@@ -27,7 +27,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 const coreOptions = {
-    origin:'https://cab-booking-admin.onrender.com',
+    origin:'https://ezee-rides-admin.onrender.com',
     // origin:'http://localhost:5173',
     credentials:true
 }
