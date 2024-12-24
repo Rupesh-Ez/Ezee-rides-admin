@@ -17,22 +17,22 @@ const AddDriverForm = ({ id }) => {
   const [images, setImages] = useState({});
 
   const getImageUrl = (doc) => {
-    
+
     var img1, img2;
     if (doc === "Driving Licence") {
       img1 = images["DL Upload Front"];
       img2 = images["DL Upload Back"];
-    }else if(doc==="Registration Certificate"){
-      img1=images["RC Upload Front"];
-      img2=images["RC Upload Back"];
-    }else if(doc === "Adhar Card"){      
+    } else if (doc === "Registration Certificate") {
+      img1 = images["RC Upload Front"];
+      img2 = images["RC Upload Back"];
+    } else if (doc === "Adhar Card") {
       img1 = images["Aadhaar Upload Front"]
       img2 = images["Aadhaar Upload Back"]
-    }else if(doc === "Licence Plate"){
+    } else if (doc === "Licence Plate") {
       img1 = images["Upload License Plate"];
-    }else if(doc ==="PAN Card"){
+    } else if (doc === "PAN Card") {
       img1 = images["Pan Card Upload Front"]
-    }else if(doc === "Profile Picture"){
+    } else if (doc === "Profile Picture") {
       img1 = images["profile"]
     }
     return [img1, img2];
@@ -169,7 +169,7 @@ const AddDriverForm = ({ id }) => {
           setVehicleverified(response.data.data.Vehiclevalidate);
           setIdentityverified(response.data.data.Identityvalidate);
           setBankaccvalidate(response.data.data.bankaccvalidate);
-          if(response.data.data.Identityvalidate==true){
+          if (response.data.data.Identityvalidate == true) {
             setACverified(true);
             setPANverified(true);
           }
@@ -207,7 +207,7 @@ const AddDriverForm = ({ id }) => {
     }
   }, [ACvalidate, PANvalidate]);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       // Prepare the data to send
@@ -218,8 +218,8 @@ const AddDriverForm = ({ id }) => {
         Identityvalidate,
         bankaccvalidate,
       };
-      
-  
+
+
       // Send POST request to the backend
       const response = await axios.post(
         `${BACKEND_API_ENDPOINT}/api/driver/update/${id.id}`,
@@ -231,7 +231,7 @@ const AddDriverForm = ({ id }) => {
           withCredentials: true, // If using cookies for authentication
         }
       );
-  
+
       // Handle the response
       if (response.data.success) {
         alert('Verification statuses updated successfully.');
@@ -255,7 +255,7 @@ const AddDriverForm = ({ id }) => {
       return true;
     } else if (selectedDocument === "Adhar Card" && ACvalidate) {
       return true;
-    } else if (selectedDocument === "PAN Card" && PANvalidate){
+    } else if (selectedDocument === "PAN Card" && PANvalidate) {
       return true;
     }
     return false;
@@ -276,17 +276,20 @@ const AddDriverForm = ({ id }) => {
                 const [img1, img2] = getImageUrl(selectedDocument);
                 return (
                   <>
+                    {!img1 && (
+                      <span className='text-4xl font-semibold text-blue-400 py-[10rem] px-[18rem]'> Hang On Loading docs... </span>
+                    )}
                     {img1 && (
                       <img
                         src={img1}
-                        alt={`${selectedDocument} Front`}
+                        alt={`${selectedDocument} Front not uploaded yet!!!`}
                         className="w-1/2 h-96 object-cover border"
                       />
                     )}
                     {img2 && (
                       <img
                         src={img2}
-                        alt={`${selectedDocument} Back`}
+                        alt={`${selectedDocument} Back not uploaded yet!!!`}
                         className="w-1/2 h-96 object-cover border"
                       />
                     )}
@@ -329,14 +332,14 @@ const AddDriverForm = ({ id }) => {
           <h2 className="text-xl font-bold mb-4">Driver Documents</h2>
           <div className="flex flex-col items-center mb-4">
             <div className="w-48 h-48 rounded-full bg-gray-200 ">
-            {
-              (()=>{
-                const [img1, img2] = getImageUrl("Profile Picture");
-                return(
-                  <img src={img1 || userIcon} alt="" className='w-full h-full rounded-full object-contain' />
-                )
-              })()
-            }
+              {
+                (() => {
+                  const [img1, img2] = getImageUrl("Profile Picture");
+                  return (
+                    <img src={img1 || userIcon} alt="" className='w-full h-full rounded-full object-contain' />
+                  )
+                })()
+              }
             </div>
 
           </div>

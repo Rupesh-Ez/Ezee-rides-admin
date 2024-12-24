@@ -9,6 +9,7 @@ const FileModel = mongoose.model('Files', fileSchema, 'Files');
 export const getAllDrivers = async (req, res) => {
   try {
     const drivers = await DriverModel.find({});
+    // const drivers = await DriverModel.find({}).sort({ createdAt: -1 });
     return res.status(200).json({
       success: true,
       message: 'drivers fetched successfully',
@@ -18,7 +19,6 @@ export const getAllDrivers = async (req, res) => {
   } catch (err) {
     return res.status(500).json({ error: 'Failed to fetch driver data', details: err });
   }
-
 };
 
 export const getDriverCount = async (req, res) => {
@@ -136,6 +136,46 @@ export const updateVerificationStatuses = async (req, res) => {
       success: false,
       message: 'An error occurred while updating verification statuses',
       error: err.message,
+    });
+  }
+};
+
+export const deleteDriver = async (req, res) => {
+  try {
+    const { _id } = req.body;
+
+    // Validate that ID is provided
+    if (!_id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Driver ID is required'
+      });
+    }
+    console.log(_id);
+    
+
+    // Find and delete the region
+    const deletedDriver = await DriverModel.findByIdAndDelete(_id);
+
+    // Check if region was actually found and deleted
+    if (!deletedDriver) {
+      return res.status(404).json({
+        success: false,
+        message: 'Driver not found'
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: 'driver deleted successfully',
+    });
+
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error deleting driver:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
     });
   }
 };
