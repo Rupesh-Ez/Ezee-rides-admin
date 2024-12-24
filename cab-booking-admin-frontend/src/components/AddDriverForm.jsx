@@ -13,6 +13,7 @@ const AddDriverForm = ({ id }) => {
   const [Identityvalidate, setIdentityverified] = useState(false);
   const [ACvalidate, setACverified] = useState(false);
   const [PANvalidate, setPANverified] = useState(false);
+  const [bankaccvalidate, setBankaccvalidate] = useState(false);
   const [images, setImages] = useState({});
 
   const getImageUrl = (doc) => {
@@ -31,6 +32,8 @@ const AddDriverForm = ({ id }) => {
       img1 = images["Upload License Plate"];
     }else if(doc ==="PAN Card"){
       img1 = images["Pan Card Upload Front"]
+    }else if(doc === "Profile Picture"){
+      img1 = images["profile"]
     }
     return [img1, img2];
   }
@@ -165,6 +168,7 @@ const AddDriverForm = ({ id }) => {
           setRCverified(response.data.data.RCvalidate);
           setVehicleverified(response.data.data.Vehiclevalidate);
           setIdentityverified(response.data.data.Identityvalidate);
+          setBankaccvalidate(response.data.data.bankaccvalidate);
           if(response.data.data.Identityvalidate==true){
             setACverified(true);
             setPANverified(true);
@@ -212,7 +216,9 @@ const AddDriverForm = ({ id }) => {
         RCvalidate,
         Vehiclevalidate,
         Identityvalidate,
+        bankaccvalidate,
       };
+      
   
       // Send POST request to the backend
       const response = await axios.post(
@@ -239,8 +245,6 @@ const AddDriverForm = ({ id }) => {
     }
 
     navigate("/driver");
-
-    
   };
   let checkDisabled = () => {
     if (selectedDocument === "Driving Licence" && DLvalidate) {
@@ -270,9 +274,6 @@ const AddDriverForm = ({ id }) => {
             <div className="mb-4 flex gap-2">
               {(() => {
                 const [img1, img2] = getImageUrl(selectedDocument);
-                // console.log(img2);
-                
-
                 return (
                   <>
                     {img1 && (
@@ -327,8 +328,15 @@ const AddDriverForm = ({ id }) => {
         <div className="w-1/3 border rounded-lg p-4 bg-white shadow">
           <h2 className="text-xl font-bold mb-4">Driver Documents</h2>
           <div className="flex flex-col items-center mb-4">
-            <div className="w-28 h-28 rounded-full bg-gray-200 ">
-              <img src={userIcon} alt="" className='w-full h-full rounded-full object-cove' />
+            <div className="w-48 h-48 rounded-full bg-gray-200 ">
+            {
+              (()=>{
+                const [img1, img2] = getImageUrl("Profile Picture");
+                return(
+                  <img src={img1 || userIcon} alt="" className='w-full h-full rounded-full object-contain' />
+                )
+              })()
+            }
             </div>
 
           </div>
@@ -379,6 +387,15 @@ const AddDriverForm = ({ id }) => {
                 >
                   PAN Card
                 </button><span className={`${(PANvalidate) ? "text-green-400" : "text-red-500"} ml-4 font-semibold`}>{(PANvalidate) ? " ✅ Verified" : "❌ Not verified"}</span>
+              </li>
+              <li>
+                <button
+                  type='button'
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={() => setBankaccvalidate(true)}
+                >
+                  Verify Bank Account
+                </button><span className={`${(bankaccvalidate) ? "text-green-400" : "text-red-500"} ml-4 font-semibold`}>{(bankaccvalidate) ? " ✅ Verified" : "❌ Not verified"}</span>
               </li>
             </ul>
           </div>

@@ -92,7 +92,9 @@ export const updateVerificationStatuses = async (req, res) => {
     const { DLvalidate,
       RCvalidate,
       Vehiclevalidate,
-      Identityvalidate, } = req.body;
+      Identityvalidate,
+      bankaccvalidate } = req.body;
+      
 
     // Check if driverId is provided
     if (!id) {
@@ -111,8 +113,10 @@ export const updateVerificationStatuses = async (req, res) => {
     else {updates.Vehiclerejected = true; updates.Vehiclevalidate = false}
     if (Identityvalidate) {updates.Identityvalidate = true;updates.Identityrejected =false}
     else {updates.Identityrejected = true; updates.Identityvalidate = false}
-    if(DLvalidate && RCvalidate && Vehiclevalidate && Identityvalidate) {updates.profilevalidate = true;updates.profilerejected =false}
+    if(DLvalidate && RCvalidate && Vehiclevalidate && Identityvalidate && bankaccvalidate) {updates.profilevalidate = true;updates.profilerejected =false}
     else {updates.profilerejected = true; updates.profilevalidate = false}
+    if(bankaccvalidate){updates.bankaccvalidate=true; updates.bankaccrejected=false}
+    else{updates.bankaccvalidate=false; updates.bankaccrejected=true}
 
     // Update the document
     const updatedDriver = await DriverModel.findOneAndUpdate(
