@@ -15,6 +15,7 @@ import CustomerRoute from './routes/customer.route.js'
 import RidesRoute from './routes/ride.route.js'
 import ComplaintsRoute from './routes/complaint.route.js'
 import WithdrawRoute from './routes/withdraw.route.js'
+import fileUpload from 'express-fileupload';
 import path from 'path'
 
 dotenv.config({})
@@ -23,6 +24,7 @@ const app = express();
 
 const _dirname = path.resolve();
 
+app.use(fileUpload());
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())

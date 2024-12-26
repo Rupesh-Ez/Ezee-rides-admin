@@ -10,27 +10,46 @@ export const saveNotification = async (req, res) => {
             message,
             schedule,
         } = req.body;
+        
 
         // Validate required fields
         if (!title || !message) {
             return res.status(400).json({
                 success: false,
-                message: "Title and message are required"
+                message: "Title and message are required",
             });
         }
+        
+        let base64Image = null;
+        if (req.files && req.files.image) {
+            const imageFile = req.files.image; 
+            base64Image = imageFile.data.toString('base64'); 
+        }
 
-        // Create new notification
+        let parsedSchedule = null;
+        if (schedule) {
+            try {
+                parsedSchedule = JSON.parse(schedule); // Parse the JSON string
+            } catch (error) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid schedule format",
+                });
+            }
+        }
+
+        // Create a new notification
         const newNotification = new PushNotification({
             customer,
             driver,
             title,
             message,
-            schedule,
-            status: schedule.enabled ? 'Scheduled' : 'Draft'
+            schedule: parsedSchedule,
+            image: base64Image, // Save the Base64-encoded image
+            status: schedule?.enabled ? 'Scheduled' : 'Draft',
         });
 
-        // Save the notification
-        const savedNotification = await newNotification.save();
+        await newNotification.save();
 
         // Respond with success
         return res.status(201).json({
@@ -129,6 +148,7 @@ export const updateNotification = async(req,res)=>{
         const updatedNotification = await PushNotification.findByIdAndUpdate(
             id,
             {
+                status:'Sent',
                 initiated:true,
             },
             { 
@@ -139,7 +159,7 @@ export const updateNotification = async(req,res)=>{
 
         // Respond with the updated service
         return res.status(200).json({
-            message: "Notification updated successfully",
+            message: "Notification Initiated successfully",
             success: true,
         });
 
