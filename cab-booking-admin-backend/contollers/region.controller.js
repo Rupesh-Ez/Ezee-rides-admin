@@ -105,7 +105,6 @@ export const updateRegion = async (req, res) => {
 
     const { id } = req.params;
     const { Status } = req.body;
-    console.log(id, Status);
 
     if (!id) {
       return res.status(400).json({
@@ -147,7 +146,7 @@ export const updateRegion = async (req, res) => {
 
 export const getRegioncity = async (req, res) => {
   try {
-    const regions = await Region.find({}, { city: 1 }); 
+    const regions = await Region.find({}, { city: 1 });
     return res.status(200).json({
       success: true,
       data: regions,
@@ -159,4 +158,104 @@ export const getRegioncity = async (req, res) => {
       error: error.message,
     });
   }
+}
+
+export const getRegionById = async (req, res) => {
+  try {
+    const { _id } = req.body;
+
+    if (!_id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Region ID required',
+      });
+    }
+
+    const regionById = await Region.findById(_id)
+      .select('-__v')
+      .lean();
+
+    // Check if service exists
+    if (!regionById) {
+      return res.status(404).json({
+        success: false,
+        message: 'Region not found',
+      });
+    }
+
+    // Return the service details
+    return res.status(200).json({
+      success: true,
+      data: regionById,
+      message: 'Region retrieved successfully',
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message,
+    });
+  }
+}
+
+export const updateRegionById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { city, distance, timezone, status, coordinates } = req.body;
+    if (!city || !distance || !timezone || !status || !coordinates) {
+      return res.status(400).json({
+        message: "something is missing",
+        success: false
+      })
+    }
+
+    const areCoordinatesValid = coordinates.every(coord =>
+      coord.lat !== undefined &&
+      coord.lng !== undefined &&
+      typeof coord.lat === 'number' &&
+      typeof coord.lng === 'number'
+    );
+
+    if (!areCoordinatesValid) {
+      return res.status(400).json({
+        message: "Invalid coordinates format. Ensure all coordinates have valid lat and lng values.",
+        success: false
+      });
+    } 
+    
+    const existingRegion = await Region.findById(id);
+    if (!existingRegion) {
+      return res.status(404).json({
+        message: "Service not found",
+        success: false,
+      });
+    }
+
+    // Update the service
+    await Region.findByIdAndUpdate(
+      id,
+      {
+        city, distance, timezone, status, coordinates
+      },
+      {
+        new: true,  // Return the updated document
+        runValidators: true  // Run model validations
+      }
+    );
+
+    // Respond with the updated service
+    return res.status(200).json({
+      message: "Region updated successfully",
+      success: true,
+    });
+
+  } catch (error) {
+    console.error('Error updating Region:', error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import axios from 'axios'
@@ -6,7 +7,7 @@ import ToogleButton from './ToogleButton.jsx';
 import BACKEND_API_ENDPOINT from '../utils/constants.js'
 
 const RegionList = () => {
-    
+
     const [regions, setRegions] = useState([]);
     useEffect(() => {
         const fetchRegions = async () => {
@@ -58,7 +59,7 @@ const RegionList = () => {
         setUsers(regions);
     }, [regions]);
 
-    const handleConfirm = async (e)=>{
+    const handleConfirm = async (e) => {
         try {
             const response = await axios.delete(`${BACKEND_API_ENDPOINT}/api/region/deleteregion`, {
                 data: { _id: selectedRegionDetails._id },
@@ -68,13 +69,13 @@ const RegionList = () => {
                 withCredentials: true,
             });
             if (response.data.success) {
-                setRegions(prevRegions => 
+                setRegions(prevRegions =>
                     prevRegions.filter(region => region._id !== selectedRegionDetails._id)
                 );
             } else {
                 alert('Failed to fetch regions');
             }
-        }catch (error) {
+        } catch (error) {
             alert('An error occurred while fetching regions');
         } finally {
             closeConfirm();
@@ -82,29 +83,29 @@ const RegionList = () => {
     }
 
     const handleRegionStatusChange = async (regionId, newStatus) => {
-        
+
         try {
-          const response = await axios.post(`${BACKEND_API_ENDPOINT}/api/region/update/${regionId}`, { Status: newStatus }, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            withCredentials: true,
-          });
-      
-          if (response.data.success) {
-            setRegions((prevUsers) =>
-              prevUsers.map((user) => (user._id === regionId ? { ...user, status: (newStatus)?"Active":"Inactive" } : user))
-            );
-            setSelectedRegionDetails({});
-            
-          } else {
-            alert('Failed to update region status');
-          }
+            const response = await axios.post(`${BACKEND_API_ENDPOINT}/api/region/update/${regionId}`, { Status: newStatus }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+            });
+
+            if (response.data.success) {
+                setRegions((prevUsers) =>
+                    prevUsers.map((user) => (user._id === regionId ? { ...user, status: (newStatus) ? "Active" : "Inactive" } : user))
+                );
+                setSelectedRegionDetails({});
+
+            } else {
+                alert('Failed to update region status');
+            }
         } catch (error) {
-          alert('An error occurred while updating the region status');
-          console.error(error);
+            alert('An error occurred while updating the region status');
+            console.error(error);
         }
-      };
+    };
 
     useEffect(() => {
         const startIdx = (currentPage - 1) * entriesPerPage;
@@ -116,7 +117,7 @@ const RegionList = () => {
 
     const handleEntriesChange = (e) => {
         setEntriesPerPage(Number(e.target.value));
-        setCurrentPage(1); 
+        setCurrentPage(1);
     };
 
     const handlePageChange = (pageNum) => {
@@ -227,7 +228,7 @@ const RegionList = () => {
 
                         <div className="flex justify-end p-4 border-t gap-2">
                             <button
-                                className={` text-white px-4 py-2 rounded ${(confirmText !== 'Delete')?'bg-red-200':'bg-red-500 hover:bg-red-600'}`}
+                                className={` text-white px-4 py-2 rounded ${(confirmText !== 'Delete') ? 'bg-red-200' : 'bg-red-500 hover:bg-red-600'}`}
                                 onClick={handleConfirm}
                                 disabled={confirmText !== 'Delete'}
                             >
@@ -286,14 +287,17 @@ const RegionList = () => {
                                 <td className="p-2 border-b-2 border-blue-200 text-center">{region.timezone}</td>
                                 <td className="p-2 border-b-2 border-blue-200 text-center">{new Date(region.createdAt).toLocaleString()}</td>
                                 <td className="p-2 border-b-2 border-blue-200 text-center">
-                                <ToogleButton initialState={region.status} onToggle={(newState) => handleRegionStatusChange(region._id, newState)} />
+                                    <ToogleButton initialState={region.status} onToggle={(newState) => handleRegionStatusChange(region._id, newState)} />
                                 </td>
                                 <td className="p-2 border-b-2 border-blue-200 text-center">
+                                    <Link to={`/region/update/${region._id}`}>
+                                        <button className="text-blue-600 mx-1 text-xl"><FaRegEdit /></button>
+                                    </Link>
                                     <button onClick={() => {
                                         setSelectedRegionDetails(region);
                                         openModal();
                                     }} className="text-blue-600 mx-1 text-xl">👁️</button>
-                                    <button className="text-red-600 mx-1 text-xl" onClick={()=>{
+                                    <button className="text-red-600 mx-1 text-xl" onClick={() => {
                                         setSelectedRegionDetails(region);
                                         openConfirm();
                                     }} ><MdDelete /></button>

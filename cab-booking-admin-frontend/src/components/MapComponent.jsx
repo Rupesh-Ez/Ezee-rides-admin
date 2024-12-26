@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-const MapComponent = ({ onPolygonComplete, mapCenter }) => {
+const MapComponent = ({ onPolygonComplete, mapCenter, coordinates }) => {
   const mapRef = useRef(null); // Persist the map reference
   const drawingManagerRef = useRef(null); // Persist the DrawingManager reference
   const polygonsRef = useRef([]); // Keep track of drawn polygons
@@ -55,8 +55,7 @@ const MapComponent = ({ onPolygonComplete, mapCenter }) => {
         );
 
         drawingManagerRef.current.setMap(mapRef.current);
-      }
-      else {
+      } else {
         mapRef.current.setCenter(mapCenter);
       }
     };
@@ -66,7 +65,38 @@ const MapComponent = ({ onPolygonComplete, mapCenter }) => {
     } else {
       console.error("Google Maps API not loaded!");
     }
-  }, [onPolygonComplete,mapCenter]);
+  }, [onPolygonComplete, mapCenter]);
+
+  // Draw polygons from provided coordinates
+  useEffect(() => {
+    if (coordinates && coordinates.length > 0 && mapRef.current) {
+      // Clear existing polygons
+      polygonsRef.current.forEach((polygon) => {
+        polygon.setMap(null);
+      });
+      polygonsRef.current = [];
+
+      // Preprocess coordinates to extract only lat and lng
+      const processedCoordinates = coordinates.map(coord => ({
+        lat: coord.lat,
+        lng: coord.lng,
+      }));
+
+      // Create a new polygon
+      const polygon = new window.google.maps.Polygon({
+        paths: processedCoordinates,
+        clickable: true,
+        draggable: false,
+        editable: true,
+        fillColor: "#D3D3D3",
+        fillOpacity: 0.5,
+      });
+
+      polygon.setMap(mapRef.current);
+      polygonsRef.current.push(polygon);
+    }
+  }, [coordinates]);
+
 
   const resetPolygons = () => {
     polygonsRef.current.forEach((polygon) => {
@@ -90,7 +120,7 @@ const MapComponent = ({ onPolygonComplete, mapCenter }) => {
         type="button"
         onClick={resetPolygons}
         style={{
-          width:"95%",
+          width: "95%",
           marginTop: "20px",
           padding: "10px 20px",
           backgroundColor: "#ff4d4d",

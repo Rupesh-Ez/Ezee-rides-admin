@@ -32,6 +32,7 @@ import NotFound from './pages/NotFound.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Withdraw from './pages/Withdraw.jsx';
 import UpdateDriverDocs from './pages/UpdateDriverDocs.jsx';
+import UpdateRegionForm from './components/UpdateRegion.jsx';
 
 const libraries = ["places", "drawing"];
 
@@ -56,6 +57,7 @@ function App() {
           <Route path="/coupon/update/:id" element={<ProtectedRoute><UpdateCoupon /></ProtectedRoute>} />
           <Route path="/region" element={<ProtectedRoute><Region /></ProtectedRoute>} />
           <Route path="/region/create" element={<ProtectedRoute><CreateRegion /></ProtectedRoute>} />
+          <Route path="/region/update/:id" element={<ProtectedRoute><UpdateRegionForm/></ProtectedRoute>} />
           <Route path="/service" element={<ProtectedRoute><Service /></ProtectedRoute>} />
           <Route path="/service/create" element={<ProtectedRoute><CreateService /></ProtectedRoute>} />
           <Route path="/service/update/:id" element={<ProtectedRoute><UpdateService /></ProtectedRoute>} />

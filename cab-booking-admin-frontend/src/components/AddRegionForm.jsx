@@ -15,7 +15,7 @@ const AddRegionForm = () => {
   });
 
   const [polygonCoordinates, setPolygonCoordinates] = useState([]);
-  const [mapCenter, setMapCenter] = useState({ lat: 21.8974, lng: 83.3950 }); // Default location
+  const [mapCenter, setMapCenter] = useState({ lat: 21.8974, lng: 83.3950 });
 
   const handleChangeMap = (selectedOption) => {
     setFormData({ ...formData, city: selectedOption?.label || "" });
@@ -38,16 +38,10 @@ const AddRegionForm = () => {
     setPolygonCoordinates(coordinates);
   };
 
-  const handleChange = (selectedOption) => {
-    setFormData({ ...formData, city: selectedOption?.label || "" });
-  };
-
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
     
     const payload = { ...formData, coordinates: polygonCoordinates };
     
@@ -72,10 +66,7 @@ const AddRegionForm = () => {
       }
     } catch (error) {
       alert(error.response?.data?.message || "An unexpected error occurred");
-    } finally {
-
-      setIsLoading(false); // End loading
-    }
+    } 
   };
 
   return (
