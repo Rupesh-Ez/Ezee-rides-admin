@@ -70,10 +70,10 @@ const UpdateRegionForm = () => {
                 });
             }
         };
-    
+
         updateMapCenter();
     }, [formData.city]);
-    
+
 
     const [polygonCoordinates, setPolygonCoordinates] = useState([]);
     const [mapCenter, setMapCenter] = useState({ lat: 21.8974, lng: 83.3950 });
@@ -224,7 +224,16 @@ const UpdateRegionForm = () => {
                         </div>
 
                         {/* Submit Button */}
-                        <div>
+                        <div className="flex gap-3 mx-6">
+                            <button
+                                type="button"
+                                className="bg-red-500 text-white px-6 py-2 relative left-5 bottom-5 rounded hover:bg-red-600 transition-colors"
+                                onClick={() => {
+                                    navigate("/service")
+                                }}
+                            >
+                                Cancel
+                            </button>
                             <button
                                 type="submit"
                                 className="bg-green-500 text-white px-6 py-2 relative left-5 bottom-5 rounded hover:bg-green-600 transition-colors"

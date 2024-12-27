@@ -5,20 +5,6 @@ import axios from 'axios'
 import BACKEND_API_ENDPOINT from '../utils/constants.js'
 
 const RideRequestList = ({ status }) => {
-    // Sample data
-    // const rideRequest = [
-    //     { id: 11, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 10, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'completed' },
-    //     { id: 12, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 11, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'new' },
-    //     { id: 13, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 12, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'cancelled' },
-    //     { id: 14, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 13, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'cancelled' },
-    //     { id: 15, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 14, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'new' },
-    //     { id: 16, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 16, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'new' },
-    //     { id: 17, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 10, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'new' },
-    //     { id: 18, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 21, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'completed' },
-    //     { id: 19, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 10, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'completed' },
-    //     { id: 20, user: 'aalu tikki', requestedDriver: 'Hari chatni', driver: 'lal chatni', dateTime: 'October 10, 2024 6:16 AM', paymentMethod: 'cash', payment: 'paid', invoice: null, Status: 'pending' },
-
-    // ];
 
     const [rideRequest, setRideRequest] = useState([]);
 
@@ -69,14 +55,14 @@ const RideRequestList = ({ status }) => {
         // Apply start date filter
         if (startDate) {
             filteredUsers = filteredUsers.filter(
-                (request) => new Date(request.time.split("T")[0]) >= new Date(startDate)
+                (request) => new Date(request.createdAt.split("T")[0]) >= new Date(startDate)
             );
         }
 
         // Apply end date filter
         if (endDate) {
             filteredUsers = filteredUsers.filter(
-                (request) => new Date(request.time.split("T")[0]) <= new Date(endDate)
+                (request) => new Date(request.createdAt.split("T")[0]) <= new Date(endDate)
             );
         }
 
