@@ -298,7 +298,7 @@ const AddDriverForm = ({ id }) => {
               })()}
             </div>
             <div className="flex justify-between">
-              <div className=' flex gap-2'>
+              <div className=' flex gap-3 mt-4'>
                 <button
                   type='button'
                   className={`bg-green-500 text-white px-4 py-2 hover:bg-green-600 rounded ${checkDisabled() ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -317,7 +317,7 @@ const AddDriverForm = ({ id }) => {
               </div>
               <button
                 type='button'
-                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded mt-4"
                 onClick={handleCloseModal}
               >
                 Close
