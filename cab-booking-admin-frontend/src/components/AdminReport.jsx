@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
-import BACKEND_API_ENDPOINT from '../utils/constants.js'
+import axios from 'axios';
+import BACKEND_API_ENDPOINT from '../utils/constants.js';
 
 const AdminReport = () => {
-
     const [reports, setReports] = useState([]);
 
     useEffect(() => {
         const fetchReports = async () => {
-            try { 
-                
+            try {
                 const response = await axios.get(`${BACKEND_API_ENDPOINT}/api/rides/getallrides`, {
                     headers: {
                         'Content-Type': 'application/json',
@@ -17,7 +15,6 @@ const AdminReport = () => {
                     withCredentials: true,
                 });
                 if (response.data.success) {
-
                     setReports(response.data.data);
                 } else {
                     alert('Failed to fetch reports');
@@ -41,7 +38,7 @@ const AdminReport = () => {
         const startIdx = (currentPage - 1) * entriesPerPage;
         const endIdx = startIdx + entriesPerPage;
         setDisplayedUsers(users.slice(startIdx, endIdx));
-    }, [users, currentPage, entriesPerPage,reports]);
+    }, [users, currentPage, entriesPerPage, reports]);
 
     const totalPages = Math.ceil(users.length / entriesPerPage);
 
@@ -60,6 +57,66 @@ const AdminReport = () => {
 
     const handleNext = () => {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    };
+
+    const renderPageButtons = () => {
+        const pageButtons = [];
+        const maxButtons = 3;
+
+        let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+        let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+        if (endPage - startPage + 1 < maxButtons) {
+            startPage = Math.max(1, endPage - maxButtons + 1);
+        }
+
+        if (startPage > 1) {
+            pageButtons.push(
+                <button
+                    key={1}
+                    onClick={() => handlePageChange(1)}
+                    className="px-3 py-1 rounded bg-gray-200"
+                >
+                    1
+                </button>
+            );
+            if (startPage > 2) {
+                pageButtons.push(
+                    <span key="start-ellipsis" className="px-1 py-1">...</span>
+                );
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageButtons.push(
+                <button
+                    key={i}
+                    onClick={() => handlePageChange(i)}
+                    className={`px-3 py-1 rounded ${currentPage === i ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                pageButtons.push(
+                    <span key="end-ellipsis" className="px-1 py-1">...</span>
+                );
+            }
+            pageButtons.push(
+                <button
+                    key={totalPages}
+                    onClick={() => handlePageChange(totalPages)}
+                    className="px-3 py-1 rounded bg-gray-200"
+                >
+                    {totalPages}
+                </button>
+            );
+        }
+
+        return pageButtons;
     };
 
     return (
@@ -99,7 +156,7 @@ const AdminReport = () => {
                     <tbody>
                         {displayedUsers.map((report, index) => (
                             <tr key={index} className="hover:bg-gray-50">
-                                <td className="py-1 border-b-2 border-blue-200 text-center">{report.userId.substring(0,5)}...</td>
+                                <td className="py-1 border-b-2 border-blue-200 text-center">{report.userId.substring(0, 5)}...</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">{report.userName}</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">{report.driverName}</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">{report.createdAt.split('T')[0]}</td>
@@ -113,7 +170,7 @@ const AdminReport = () => {
                 </table>
                 <div className='flex items-center justify-between p-4'>
                     <div>
-                        <p>Showing 10 of 15 entries</p>
+                        <p>Showing {displayedUsers.length} of {users.length} entries</p>
                     </div>
 
                     <div className="flex justify-center items-center gap-2 mt-4">
@@ -124,15 +181,7 @@ const AdminReport = () => {
                         >
                             Previous
                         </button>
-                        {[...Array(totalPages)].map((_, index) => (
-                            <button
-                                key={index + 1}
-                                onClick={() => handlePageChange(index + 1)}
-                                className={`px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
+                        {renderPageButtons()}
                         <button
                             onClick={handleNext}
                             disabled={currentPage === totalPages}

@@ -103,6 +103,66 @@ const CustomerData = () => {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1);
     };
 
+    const renderPageButtons = () => {
+        const pageButtons = [];
+        const maxButtons = 3;
+
+        let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+        let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+        if (endPage - startPage + 1 < maxButtons) {
+            startPage = Math.max(1, endPage - maxButtons + 1);
+        }
+
+        if (startPage > 1) {
+            pageButtons.push(
+                <button
+                    key={1}
+                    onClick={() => handlePageChange(1)}
+                    className="px-3 py-1 rounded bg-gray-200"
+                >
+                    1
+                </button>
+            );
+            if (startPage > 2) {
+                pageButtons.push(
+                    <span key="start-ellipsis" className="px-1 py-1">...</span>
+                );
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageButtons.push(
+                <button
+                    key={i}
+                    onClick={() => handlePageChange(i)}
+                    className={`px-3 py-1 rounded ${currentPage === i ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                pageButtons.push(
+                    <span key="end-ellipsis" className="px-1 py-1">...</span>
+                );
+            }
+            pageButtons.push(
+                <button
+                    key={totalPages}
+                    onClick={() => handlePageChange(totalPages)}
+                    className="px-3 py-1 rounded bg-gray-200"
+                >
+                    {totalPages}
+                </button>
+            );
+        }
+
+        return pageButtons;
+    };
+
     return (
         <div className="p-4 bg-[#f7f9ff]">
             {isConfirmOpen && (
@@ -280,7 +340,7 @@ const CustomerData = () => {
                 </table>
                 <div className='flex items-center justify-between p-4'>
                     <div>
-                        <p>Showing 10 of 15 entries</p>
+                        <p>Showing {displayedUsers.length} of {users.length} entries</p>
                     </div>
 
                     <div className="flex justify-center items-center gap-2 mt-4">
@@ -291,15 +351,7 @@ const CustomerData = () => {
                         >
                             Previous
                         </button>
-                        {[...Array(totalPages)].map((_, index) => (
-                            <button
-                                key={index + 1}
-                                onClick={() => handlePageChange(index + 1)}
-                                className={`px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
+                        {renderPageButtons()}
                         <button
                             onClick={handleNext}
                             disabled={currentPage === totalPages}

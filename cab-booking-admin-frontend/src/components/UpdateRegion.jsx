@@ -229,7 +229,7 @@ const UpdateRegionForm = () => {
                                 type="button"
                                 className="bg-red-500 text-white px-6 py-2 relative left-5 bottom-5 rounded hover:bg-red-600 transition-colors"
                                 onClick={() => {
-                                    navigate("/service")
+                                    navigate("/region")
                                 }}
                             >
                                 Cancel

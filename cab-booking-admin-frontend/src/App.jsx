@@ -40,7 +40,7 @@ function App() {
 
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyBjGyyXWfWYY0gG4OlJTFQ82Gr6SU7siw8"
+      googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
       libraries={libraries}
     >
       <Router>
