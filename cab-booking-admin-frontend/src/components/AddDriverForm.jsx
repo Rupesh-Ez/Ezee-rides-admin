@@ -407,68 +407,85 @@ const AddDriverForm = ({ id }) => {
         {/* Right Section */}
         <div className="w-2/3 border rounded-lg p-4 bg-white shadow">
           <h2 className="text-2xl font-bold mb-6">Driver Information</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { label: "Full Name", name: "fullname", type: "text" },
-              { label: "Email", name: "email", type: "email" },
-              { label: "Date Of Brith", name: "dateOfBirth", type: "text" },
-              { label: "Referral Code", name: "referralCode", type: "text" },
 
-              { label: "Driver Licence Number", name: "licensenumber", type: "text" },
-              { label: "Vehicle type", name: "vehicletype", type: "text" },
-              { label: "Ownership", name: "ownership", type: "text" },
-              { label: "Vehicle Company", name: "vehiclecompany", type: "text" },
-              { label: "Vehicle Model", name: "model", type: "text" },
-              { label: "Vehicle Plate Number", name: "vehiclenumber", type: "text" },
-              { label: "Color", name: "color", type: "text" },
-              { label: "Production Year", name: "Year", type: "text" },
+          <fieldset className="border border-gray-400 rounded px-2 mb-2">
+            <legend className="text-lg font-semibold px-2">Driver Details</legend>
+            <div className="grid grid-cols-2 gap-4 p-2">
+              {[
+                { label: "Full Name", name: "fullname", type: "text" },
+                { label: "Email", name: "email", type: "email" },
+                { label: "Date Of Brith", name: "dateOfBirth", type: "text" },
+                { label: "Gender", name: "gender", type: "text" },
 
-              { label: "Account Holder Name", name: "accountHolderName", type: "text" },
-              { label: "Account Number", name: "accountNumber", type: "text" },
-              { label: "IFSC Code Number", name: "ifscCode", type: "text" },
-            ].map(({ label, name, type }) => (
-              <div key={name}>
-                <label className="block mb-1">
-                  {label} <span className="text-red-500">*</span>
-                </label>
-                <input
-                  disabled
-                  type={type}
-                  name={name}
-                  value={formData[name]}
-                  onChange={handleChange}
-                  className="w-full border border-blue-300 bg-[#f7f9ff] focus:bg-white outline-none rounded p-2"
-                />
-              </div>
-            ))}
-            <div>
-              <label className="block mb-1">Gender <span className='text-red-500'>*</span></label>
-              <input
-                disabled
-                type='text'
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                className="w-full border rounded p-2 outline-none border-blue-300 bg-[#f7f9ff] focus:bg-white"
-              />
 
+                { label: "Driver Licence Number", name: "licensenumber", type: "text" },
+                { label: "Vehicle type", name: "vehicletype", type: "text" },
+                { label: "Ownership", name: "ownership", type: "text" },
+                { label: "Vehicle Company", name: "vehiclecompany", type: "text" },
+                { label: "Vehicle Model", name: "model", type: "text" },
+                { label: "Vehicle Plate Number", name: "vehiclenumber", type: "text" },
+                { label: "Color", name: "color", type: "text" },
+                { label: "Production Year", name: "Year", type: "text" },
+                { label: "Referral Code", name: "referralCode", type: "text" },
+              ].map(({ label, name, type }) => (
+                <div key={name}>
+                  <label className="block mb-1">
+                    {label} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    disabled
+                    type={type}
+                    name={name}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    className="w-full border border-blue-300 bg-[#f7f9ff] focus:bg-white outline-none rounded p-2"
+                  />
+                </div>
+              ))}
             </div>
-            <div>
-              <label className="block mb-1">Contact Number <span className='text-red-500'>*</span></label>
-              <div className='flex'>
-                <select className="border rounded p-2 mr-2">
-                  <option value="+91">+91</option>
-                </select>
-                <input
-                  disabled
-                  maxLength={10}
-                  name="phonenumber"
-                  value={formData.phonenumber}
-                  onChange={handleChange}
-                  className="w-full border rounded p-2 outline-none border-blue-300 bg-[#f7f9ff] focus:bg-white"
-                />
+          </fieldset>
+          <div>
+            <fieldset className="border border-gray-400 rounded p-2 grid grid-cols-2 gap-4">
+              <legend className="text-lg font-semibold px-2">Driver Account Details</legend>
+
+              {[
+                { label: "Account Holder Name", name: "accountHolderName", type: "text" },
+                { label: "Account Number", name: "accountNumber", type: "text" },
+                { label: "IFSC Code Number", name: "ifscCode", type: "text" },
+              ].map(({ label, name, type }) => (
+                <div key={name} className="mb-4">
+                  <label className="block mb-1">
+                    {label} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    disabled
+                    type={type}
+                    name={name}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    className="w-full border border-blue-300 bg-[#f7f9ff] focus:bg-white outline-none rounded p-2"
+                  />
+                </div>
+              ))}
+              <div>
+                <label className="block mb-1">Contact Number <span className='text-red-500'>*</span></label>
+                <div className='flex'>
+                  <select className="border rounded p-2 mr-2">
+                    <option value="+91">+91</option>
+                  </select>
+                  <input
+                    disabled
+                    maxLength={10}
+                    name="phonenumber"
+                    value={formData.phonenumber}
+                    onChange={handleChange}
+                    className="w-full border rounded p-2 outline-none border-blue-300 bg-[#f7f9ff] focus:bg-white"
+                  />
+                </div>
               </div>
-            </div>
+
+            </fieldset>
+
           </div>
           <div className="flex justify-end">
             <button

@@ -8,8 +8,8 @@ const FileModel = mongoose.model('Files', fileSchema, 'Files');
 
 export const getAllDrivers = async (req, res) => {
   try {
-    const drivers = await DriverModel.find({});
-    // const drivers = await DriverModel.find({}).sort({ createdAt: -1 });
+    // const drivers = await DriverModel.find({});
+    const drivers = await DriverModel.find({}).sort({ createdAt: -1 });
     return res.status(200).json({
       success: true,
       message: 'drivers fetched successfully',

@@ -89,7 +89,7 @@ const AddRegionForm = () => {
               }}
               apiOptions={{ region: 'in' }}
               autocompletionRequest={{
-                componentRestrictions: { country: 'in' }, // Restrict results to India
+                componentRestrictions: { country: 'in' },
                 types: ['(cities)'], // Restrict results to cities only
               }}
             />
