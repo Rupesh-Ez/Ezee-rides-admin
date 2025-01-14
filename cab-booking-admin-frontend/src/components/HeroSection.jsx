@@ -137,7 +137,7 @@ const HeroSection = () => {
         ))}
       </div>
       <div className="container mx-auto py-8 grid gap-6 md:grid-cols-2">
-        <RecentRequests />
+        {/* <RecentRequests /> */}
         <IncomeChart />
       </div>
     </div>

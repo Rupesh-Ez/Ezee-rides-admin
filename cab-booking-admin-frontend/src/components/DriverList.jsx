@@ -58,6 +58,7 @@ const DriverList = ({ pending }) => {
                 setDrivers(prevDrivers => 
                     prevDrivers.filter(driver => driver._id !== selectedDriverDetails._id)
                 );
+                alert("Driver Removed Successfully!!")
             } else {
                 alert('Failed to fetch drivers');
             }
