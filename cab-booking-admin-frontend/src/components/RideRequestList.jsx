@@ -55,14 +55,14 @@ const RideRequestList = ({ status }) => {
         // Apply start date filter
         if (startDate) {
             filteredUsers = filteredUsers.filter(
-                (request) => new Date(request.createdAt.split("T")[0]) >= new Date(startDate)
+                (request) => new Date(request.createdAt?.split("T")[0]) >= new Date(startDate)
             );
         }
 
         // Apply end date filter
         if (endDate) {
             filteredUsers = filteredUsers.filter(
-                (request) => new Date(request.createdAt.split("T")[0]) <= new Date(endDate)
+                (request) => new Date(request.createdAt?.split("T")[0]) <= new Date(endDate)
             );
         }
 
@@ -200,8 +200,8 @@ const RideRequestList = ({ status }) => {
                                         <li><strong>Customer :</strong> {selectedRideDetails.userName}</li>
                                     
                                         <li><strong>Driver :</strong> {selectedRideDetails.driverName}</li>
-                                        <li><strong>Date :</strong> {selectedRideDetails.createdAt.split("T")[0]}</li>
-                                        <li><strong>Time :</strong> {selectedRideDetails.createdAt.split("T")[1]}</li>
+                                        <li><strong>Date :</strong> {selectedRideDetails.createdAt?.split("T")[0]}</li>
+                                        <li><strong>Time :</strong> {selectedRideDetails.createdAt?.split("T")[1]}</li>
                                         <li><strong>Customer Address :</strong> {selectedRideDetails.currentAddress}</li>
                                         <li><strong>Destination Address :</strong> {selectedRideDetails.destinationAddress}</li>
                                         {/* <li><strong>Invoice :</strong> {selectedRideDetails.Invoice}</li> */}
@@ -344,8 +344,8 @@ const RideRequestList = ({ status }) => {
                                 <td className="px-1 py-4 border-b-2 border-blue-200 ">{(currentPage - 1) * entriesPerPage + index + 1}</td>
                                 <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.userName}</td>
                                 <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.driverName}</td>
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.createdAt.split("T")[0]}</td>
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.createdAt.split("T")[1].split(".")[0]}</td>
+                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.createdAt?.split("T")[0]}</td>
+                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.createdAt?.split("T")[1].split(".")[0]}</td>
                                 <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.currentAddress.substring(0,30)}...</td>
                                 <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.destinationAddress.substring(0,30)}...</td>
                                 {/* <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.payment}</td>

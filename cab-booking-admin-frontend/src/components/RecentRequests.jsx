@@ -4,16 +4,6 @@ import axios from 'axios'
 import BACKEND_API_ENDPOINT from '../utils/constants.js'
 
 const RecentRequests = () => {
-  // const requests = [
-  //   { id: 1093, rider: "Harry Singh", date: "November 12, 2024 6:47 PM", driver: "-", status: "Cancelled" },
-  //   { id: 1092, rider: "Gannon Travis", date: "November 12, 2024 9:43 PM", driver: "Heather Sanford", status: "Completed" },
-  //   { id: 1091, rider: "Gannon Travis", date: "November 12, 2024 9:30 PM", driver: "-", status: "Cancelled" },
-  //   { id: 1094, rider: "Gannon Travis", date: "November 12, 2024 9:30 PM", driver: "-", status: "Cancelled" },
-  //   { id: 1095, rider: "Rajni Travis", date: "November 12, 2024 9:30 PM", driver: "-", status: "Cancelled" },
-  //   { id: 1096, rider: "Bhushan", date: "November 14, 2024 9:30 PM", driver: "Ranaji", status: "Completed" },
-    
-  // ];
-
 
   const [requests, setRideRequest] = useState([]);
 
@@ -66,7 +56,7 @@ const RecentRequests = () => {
               <td className="p-2">{request._id.substring(0, 4) + "..."}</td>
               <td className="p-2">{request.userName}</td>
               <td className="p-2">{request.driverName}</td>
-              <td className="p-2">{request.createdAt.split("T")[0]} {request.createdAt.split("T")[1].split(".")[0]}</td>
+              <td className="p-2">{request.createdAt?.split("T")[0]} {request.createdAt?.split("T")[1].split(".")[0]}</td>
               <td className="p-2">
                 <span
                   className={`px-2 py-1 rounded text-sm font-semibold ${
