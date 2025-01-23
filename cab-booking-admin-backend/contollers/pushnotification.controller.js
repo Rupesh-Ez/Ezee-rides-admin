@@ -1,4 +1,5 @@
 import PushNotification from '../models/pushnotification.model.js'
+import axios from 'axios'
 
 export const saveNotification = async (req, res) => {
     try {
@@ -10,7 +11,7 @@ export const saveNotification = async (req, res) => {
             message,
             schedule,
         } = req.body;
-        
+
 
         // Validate required fields
         if (!title || !message) {
@@ -19,11 +20,11 @@ export const saveNotification = async (req, res) => {
                 message: "Title and message are required",
             });
         }
-        
+
         let base64Image = null;
         if (req.files && req.files.image) {
-            const imageFile = req.files.image; 
-            base64Image = imageFile.data.toString('base64'); 
+            const imageFile = req.files.image;
+            base64Image = imageFile.data.toString('base64');
         }
 
         let parsedSchedule = null;
@@ -79,8 +80,8 @@ export const saveNotification = async (req, res) => {
 
 export const getAllNotifications = async (req, res) => {
     try {
-        const notifications = await PushNotification.find(); 
-        
+        const notifications = await PushNotification.find();
+
         return res.status(200).json({
             success: true,
             message: 'notifications fetched successfully',
@@ -132,14 +133,14 @@ export const deleteNotification = async (req, res) => {
     }
 };
 
-export const updateNotification = async(req,res)=>{
+export const updateNotification = async (req, res) => {
     try {
         const { id } = req.params;
 
         const existingNotification = await PushNotification.findById(id);
         if (!existingNotification) {
             return res.status(404).json({
-                message: "existingNotification not found",
+                message: "Existing notification not found",
                 success: false,
             });
         }
@@ -148,20 +149,64 @@ export const updateNotification = async(req,res)=>{
         const updatedNotification = await PushNotification.findByIdAndUpdate(
             id,
             {
-                status:'Sent',
-                initiated:true,
+                status: 'Sent',
+                initiated: true,
             },
-            { 
-                new: true,  // Return the updated document
-                runValidators: true  // Run model validations
+            {
+                new: true,
+                runValidators: true
             }
         );
 
-        // Respond with the updated service
-        return res.status(200).json({
-            message: "Notification Initiated successfully",
-            success: true,
-        });
+        // Ensure apiKey is correctly defined
+        const apiKey = 'os_v2_app_2gmkvjaa4jg53glbcw6jtpbvksarupha765u2c4gbzxqowwakkfwmliy5dhmjpi2l3yiyk7q7z5f7fpyfve5k6nphbuhnyyl7b62rei';
+        if (!apiKey) {
+            return res.status(500).json({
+                message: "OneSignal API Key not configured",
+                success: false,
+            });
+        }
+
+        const payload = {
+            app_id: 'd198aaa4-00e2-4ddd-9961-15bc99bc3554',
+            included_segments: ['All'],
+            contents: { en: existingNotification.message || "Default message" },
+            headings: { en: existingNotification.title || "Notification" },
+            data: {
+                notification_id: id,
+                type: "general"
+            },
+            big_picture: 'https://images.unsplash.com/photo-1595567377120-2b50a3f2ba3f?q=80&w=1922&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            // large_icon: 'https://images.unsplash.com/photo-1531666692006-da240046a095?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        };
+
+        try {
+            const response = await axios.post('https://onesignal.com/api/v1/notifications', payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${apiKey}`
+                }
+            });
+
+            console.log('OneSignal Response:', response.data);
+
+            return res.status(200).json({
+                message: "Notification Initiated successfully",
+                success: true,
+                responseData: response.data
+            });
+
+        } catch (axiosError) {
+            console.error('OneSignal API Error:',
+                axiosError.response ? axiosError.response.data : axiosError.message
+            );
+
+            return res.status(500).json({
+                message: "Failed to send OneSignal notification",
+                success: false,
+                error: axiosError.response ? axiosError.response.data : axiosError.message
+            });
+        }
 
     } catch (error) {
         console.error('Error updating Notification:', error);
@@ -170,5 +215,4 @@ export const updateNotification = async(req,res)=>{
             success: false,
         });
     }
-    
 }
