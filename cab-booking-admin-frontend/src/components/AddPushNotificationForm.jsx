@@ -9,7 +9,7 @@ const AddPushNotificationForm = () => {
         driver: false,
         title: "",
         message: "",
-        image: null,
+        image: "",
         schedule: {
             enabled: false,
             details: {
@@ -70,12 +70,9 @@ const AddPushNotificationForm = () => {
             formData.append("driver", form.driver);
             formData.append("title", form.title);
             formData.append("message", form.message);
+            formData.append("image", form.image);
             formData.append("schedule", JSON.stringify(form.schedule)); // Stringify nested objects
 
-            // Append the image file
-            if (form.image) {
-                formData.append("image", form.image);
-            }
 
             // Send the data using Axios
             const response = await axios.post(
@@ -97,19 +94,6 @@ const AddPushNotificationForm = () => {
         } catch (error) {
             console.error("Error in handleSubmit:", error);
             alert('An error occurred');
-        }
-    };
-
-    const [fileName, setFileName] = useState("");
-
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setFileName(file.name);
-            setForm((prevForm) => ({
-                ...prevForm,
-                image: file,
-            }));
         }
     };
 
@@ -237,26 +221,15 @@ const AddPushNotificationForm = () => {
                     {/* Add Image */}
                     <div className="flex gap-4 items-center">
                         <label htmlFor="image" className="text-sm font-medium text-gray-700">
-                            Add Image
+                            Add Image URL
                         </label>
-                        <div className="flex items-center space-x-2">
-                            <label
-                                htmlFor="image"
-                                className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 text-sm"
-                            >
-                                Choose File
-                            </label>
-                            <span className="text-sm text-gray-600">
-                                {fileName || "No file chosen"}
-                            </span>
-                        </div>
                         <input
-                            type="file"
+                            type="text"
                             name="image"
                             id="image"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            className="hidden"
+                            value={form.image}
+                            onChange={handleInputChange}
+                            className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-blue-400"
                         />
                     </div>
 

@@ -10,6 +10,7 @@ export const saveNotification = async (req, res) => {
             title,
             message,
             schedule,
+            image,
         } = req.body;
 
 
@@ -21,11 +22,6 @@ export const saveNotification = async (req, res) => {
             });
         }
 
-        let base64Image = null;
-        if (req.files && req.files.image) {
-            const imageFile = req.files.image;
-            base64Image = imageFile.data.toString('base64');
-        }
 
         let parsedSchedule = null;
         if (schedule) {
@@ -46,7 +42,7 @@ export const saveNotification = async (req, res) => {
             title,
             message,
             schedule: parsedSchedule,
-            image: base64Image, // Save the Base64-encoded image
+            image: image, // Save the Base64-encoded image
             status: schedule?.enabled ? 'Scheduled' : 'Draft',
         });
 
@@ -157,6 +153,7 @@ export const updateNotification = async (req, res) => {
                 runValidators: true
             }
         );
+        console.log(existingNotification.image);
 
         // Ensure apiKey is correctly defined
         const apiKey = 'os_v2_app_2gmkvjaa4jg53glbcw6jtpbvksarupha765u2c4gbzxqowwakkfwmliy5dhmjpi2l3yiyk7q7z5f7fpyfve5k6nphbuhnyyl7b62rei';
@@ -176,7 +173,11 @@ export const updateNotification = async (req, res) => {
                 notification_id: id,
                 type: "general"
             },
-            big_picture: 'https://images.unsplash.com/photo-1595567377120-2b50a3f2ba3f?q=80&w=1922&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            big_picture: existingNotification.image
+                ? existingNotification.image.replace(/\/file\/d\/(.*?)\/view.*/, '/uc?export=view&id=$1')
+                : undefined,
+
+
             // large_icon: 'https://images.unsplash.com/photo-1531666692006-da240046a095?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
         };
 
@@ -187,8 +188,6 @@ export const updateNotification = async (req, res) => {
                     'Authorization': `Basic ${apiKey}`
                 }
             });
-
-            console.log('OneSignal Response:', response.data);
 
             return res.status(200).json({
                 message: "Notification Initiated successfully",
