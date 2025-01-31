@@ -320,7 +320,7 @@ const PushNotificationList = () => {
                 </table>
                 <div className='flex items-center justify-between p-4'>
                     <div>
-                        <p>Showing 10 of 15 entries</p>
+                        <p>Showing all entries.</p>
                     </div>
 
                     <div className="flex justify-center items-center gap-2 mt-4">

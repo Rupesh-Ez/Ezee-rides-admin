@@ -357,6 +357,12 @@ const Sidebar = () => {
           </ul>
         </li>
         <li>
+          <Link to="/deals/deal-list" className="flex items-center space-x-3 p-2 hover:bg-blue-100 hover:text-blue-600 rounded">
+          <FaGift />
+            {!isCollapsed && <span>Deals</span>}
+          </Link>
+        </li>
+        <li>
           <Link to="/report/withdraw" className="flex items-center space-x-3 p-2 hover:bg-blue-100 hover:text-blue-600 rounded">
           <FaDollarSign />
             {!isCollapsed && <span>Withdrawl Requests</span>}

@@ -33,6 +33,8 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Withdraw from './pages/Withdraw.jsx';
 import UpdateDriverDocs from './pages/UpdateDriverDocs.jsx';
 import UpdateRegionForm from './components/UpdateRegion.jsx';
+import Deals from './pages/DealsPage.jsx';
+import AddDealsPage from './pages/AddDealsPage.jsx';
 
 const libraries = ["places", "drawing"];
 
@@ -78,6 +80,8 @@ function App() {
           <Route path="/report/withdraw" element={<ProtectedRoute><Withdraw /></ProtectedRoute>} />
           <Route path="/role" element={<ProtectedRoute><Roles /></ProtectedRoute>} />
           <Route path="/permission" element={<ProtectedRoute><Permissions /></ProtectedRoute>} />
+          <Route path="/deals/deal-list" element={<ProtectedRoute><Deals/></ProtectedRoute>} />
+          <Route path="/deals/add-deal" element={<ProtectedRoute><AddDealsPage/></ProtectedRoute>} />
           <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
         </Routes>
       </Router>

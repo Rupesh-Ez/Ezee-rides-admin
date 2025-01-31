@@ -15,6 +15,7 @@ import CustomerRoute from './routes/customer.route.js'
 import RidesRoute from './routes/ride.route.js'
 import ComplaintsRoute from './routes/complaint.route.js'
 import WithdrawRoute from './routes/withdraw.route.js'
+import DealRoute from './routes/deals.route.js'
 import fileUpload from 'express-fileupload';
 import path from 'path'
 
@@ -30,8 +31,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 const coreOptions = {
-    origin:'https://ezee-rides-admin.onrender.com',
-    // origin:'http://localhost:5173',
+    // origin:'https://ezee-rides-admin.onrender.com',
+    origin:'http://localhost:5173',
     credentials:true
 }
 app.use(cors(coreOptions))
@@ -50,11 +51,12 @@ app.use("/api/customer",CustomerRoute);
 app.use("/api/rides",RidesRoute);
 app.use("/api/complaint",ComplaintsRoute);
 app.use("/api/withdraw",WithdrawRoute);
+app.use("/api/deals",DealRoute);
 
-app.use(express.static(path.join(_dirname,"/cab-booking-admin-frontend/dist")))
-app.get('*',(_,res)=>{
-    res.sendFile(path.resolve(_dirname,"cab-booking-admin-frontend","dist","index.html"));
-})
+// app.use(express.static(path.join(_dirname,"/cab-booking-admin-frontend/dist")))
+// app.get('*',(_,res)=>{
+//     res.sendFile(path.resolve(_dirname,"cab-booking-admin-frontend","dist","index.html"));
+// })
 
 app.listen(PORT,()=>{
     connectDB()
