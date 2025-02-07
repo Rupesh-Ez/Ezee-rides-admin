@@ -15,10 +15,10 @@ const UpdateService = () => {
         region: "",
         baseFare: "",
         nightCharges: "",
-        surgeCharges: "",
         minimumDistance: "",
         minimumFare: "",
         perDistance: "",
+        perDistanceLarge: "",
         perMinuteWait: "",
         adminCommission: "",
         waitingTimeLimit: "",
@@ -204,31 +204,29 @@ const UpdateService = () => {
                                 />
                             </div>
 
-                            {/*Surge charges */}
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Surge Charges <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="number"
-                                    name="surgeCharges"
-                                    value={formData.surgeCharges}
-                                    onChange={handleChange}
-                                    placeholder="Surge Charges"
-                                    className="w-full p-2 border rounded bg-[#f7f9ff]"
-                                    required
-                                />
-                            </div>
-
                             {/* Per Distance */}
                             <div>
                                 <label className="block text-sm font-medium mb-1">
-                                    Per Distance <span className="text-red-500">*</span>
+                                    Per Distance (Upto 3 km) <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="number"
                                     name="perDistance"
                                     value={formData.perDistance}
+                                    onChange={handleChange}
+                                    placeholder="Per Distance"
+                                    className="w-full p-2 border rounded"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">
+                                    Per Distance (More than 3 km) <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="number"
+                                    name="perDistanceLarge"
+                                    value={formData.perDistanceLarge}
                                     onChange={handleChange}
                                     placeholder="Per Distance"
                                     className="w-full p-2 border rounded"

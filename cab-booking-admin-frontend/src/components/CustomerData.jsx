@@ -252,7 +252,7 @@ const CustomerData = () => {
 
                                         <li><strong>Email: </strong> {selectedRideDetails.email}</li>
                                         <li><strong>Contact info: </strong> {selectedRideDetails.phoneNumber}</li>
-                                        <li><strong>Created At: </strong> {selectedRideDetails.savedAt.split("T")[0] || "12 Nov 2024"}</li>
+                                        <li><strong>Created At: </strong> {selectedRideDetails.date.split("T")[0] || "12 Nov 2024"}</li>
                                         <li><strong>Rides Booked: </strong> {selectedRideDetails.ride_booked || "0"}</li>
                                         <li><strong>Rides Cancelled: </strong> {selectedRideDetails.ride_canceled || "0"}</li>
 
@@ -320,7 +320,7 @@ const CustomerData = () => {
                                 <td className="p-2 border-b-2 border-blue-200">{user.firstName} {user.lastName}</td>
                                 <td className="p-2 border-b-2 border-blue-200">{user.email}</td>
                                 <td className="p-2 border-b-2 border-blue-200">{user.phoneNumber}</td>
-                                <td className="p-2 border-b-2 border-blue-200">{user.savedAt.split("T")[0] || "12 Nov 2024"}</td>
+                                <td className="p-2 border-b-2 border-blue-200">{user.date.split("T")[0] || "12 Nov 2024"}</td>
                                 <td className="p-2 border-b-2 border-blue-200"> <span className='text-green-500'>{user.ride_booked || "0"} </span></td>
                                 <td className="p-2 border-b-2 border-blue-200"><span className='text-red-500'>{user.ride_canceled || "0"}</span></td>
 

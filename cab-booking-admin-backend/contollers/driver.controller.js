@@ -89,56 +89,115 @@ export const getDriverDocs = async (req, res) => {
 export const updateVerificationStatuses = async (req, res) => {
   try {
     const { id } = req.params;
-    const { DLvalidate,
+    
+    // Extract verification status fields and form data from the request body
+    const {
+      ACvalidate,
+      PANvalidate,
+      DLvalidate,
       RCvalidate,
       Vehiclevalidate,
       Identityvalidate,
-      bankaccvalidate } = req.body;
-      
+      bankaccvalidate,
+      fullname,
+      email,
+      dateOfBirth,
+      referralCode,
+      phonenumber,
+      gender,
+      vehicletype,
+      model,
+      color,
+      Year,
+      vehiclecompany,
+      vehiclenumber,
+      ownership,
+      licensenumber,
+      accountHolderName,
+      accountNumber,
+      ifscCode
+    } = req.body;
 
-    // Check if driverId is provided
+    // Validate that the required `id` is provided
     if (!id) {
       return res.status(400).json({
         success: false,
-        message: 'Driver ID is required',
+        message: "Driver ID is required",
       });
     }
 
-    const updates = {};
-    if (DLvalidate ) {updates.DLvalidate = true; updates.DLrejected =false}
-    else {updates.DLrejected = true; updates.DLvalidate = false}
-    if (RCvalidate) {updates.RCvalidate = true; updates.RCrejected =false}
-    else {updates.RCrejected = true; updates.RCvalidate = false}
-    if (Vehiclevalidate) {updates.Vehiclevalidate = true; updates.Vehiclerejected =false}
-    else {updates.Vehiclerejected = true; updates.Vehiclevalidate = false}
-    if (Identityvalidate) {updates.Identityvalidate = true;updates.Identityrejected =false}
-    else {updates.Identityrejected = true; updates.Identityvalidate = false}
-    if(DLvalidate && RCvalidate && Vehiclevalidate && Identityvalidate && bankaccvalidate) {updates.profilevalidate = true;updates.profilerejected =false}
-    else {updates.profilerejected = true; updates.profilevalidate = false}
-    if(bankaccvalidate){updates.bankaccvalidate=true; updates.bankaccrejected=false}
-    else{updates.bankaccvalidate=false; updates.bankaccrejected=true}
+    // Prepare verification status updates
+    const updates = {
+      fullname,
+      email,
+      dateOfBirth,
+      referralCode,
+      phonenumber,
+      gender,
+      vehicletype,
+      model,
+      color,
+      Year,
+      vehiclecompany,
+      vehiclenumber,
+      ownership,
+      licensenumber,
+      accountHolderName,
+      accountNumber,
+      ifscCode,
+      ACvalidate: !!ACvalidate,
+      PANvalidate: !!PANvalidate,
+      DLvalidate: !!DLvalidate, 
+      DLrejected: !DLvalidate,
+      RCvalidate: !!RCvalidate,
+      RCrejected: !RCvalidate,
+      Vehiclevalidate: !!Vehiclevalidate,
+      Vehiclerejected: !Vehiclevalidate,
+      Identityvalidate: !!Identityvalidate,
+      Identityrejected: !Identityvalidate,
+      bankaccvalidate: !!bankaccvalidate,
+      bankaccrejected: !bankaccvalidate,
+    };
 
-    // Update the document
+    // If all verifications are true, mark profile as validated
+    if (DLvalidate && RCvalidate && Vehiclevalidate && Identityvalidate && bankaccvalidate) {
+      updates.profilevalidate = true;
+      updates.profilerejected = false;
+    } else {
+      updates.profilevalidate = false;
+      updates.profilerejected = true;
+    }
+
+    // Update the driver details and verification statuses in the database
     const updatedDriver = await DriverModel.findOneAndUpdate(
-      { phonenumber: id }, // Filter
-      { $set: updates }, // Updates
-      { new: true }
+      { phonenumber: id }, // Find driver by phone number
+      { $set: updates },   // Apply updates
+      { new: true, runValidators: true } // Return updated document
     );
+
+    // Check if the driver was found and updated
+    if (!updatedDriver) {
+      return res.status(404).json({
+        success: false,
+        message: "Driver not found",
+      });
+    }
 
     return res.status(200).json({
       success: true,
-      message: 'Verification statuses updated successfully',
+      message: "Driver details and verification statuses updated successfully",
       data: updatedDriver,
     });
   } catch (err) {
-    console.error('Error updating verification statuses:', err);
+    console.error("Error updating driver:", err);
     return res.status(500).json({
       success: false,
-      message: 'An error occurred while updating verification statuses',
+      message: "An error occurred while updating the driver",
       error: err.message,
     });
   }
 };
+
 
 export const deleteDriver = async (req, res) => {
   try {

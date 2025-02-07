@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { MdOutlineRotate90DegreesCw } from "react-icons/md";
 import userIcon from '../assets/man.png';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
@@ -36,6 +37,10 @@ const AddDriverForm = ({ id }) => {
       img1 = images["profile"]
     }
     return [img1, img2];
+  }
+
+  const toggleBankValidate = ()=>{
+    setBankaccvalidate(!bankaccvalidate);
   }
 
   const fetchImages = async (fileIds) => {
@@ -83,6 +88,7 @@ const AddDriverForm = ({ id }) => {
   const handleCloseModal = () => {
     setSelectedDocument(null);
     setIsModalOpen(false);
+    setRotation(0);
   };
 
   const handleVerify = () => {
@@ -169,10 +175,10 @@ const AddDriverForm = ({ id }) => {
           setVehicleverified(response.data.data.Vehiclevalidate);
           setIdentityverified(response.data.data.Identityvalidate);
           setBankaccvalidate(response.data.data.bankaccvalidate);
-          if (response.data.data.Identityvalidate == true) {
-            setACverified(true);
-            setPANverified(true);
-          }
+          
+          setACverified(response.data.data.ACvalidate);
+          setPANverified(response.data.data.PANvalidate);
+          
 
           setFormData(response.data.data);
 
@@ -212,10 +218,13 @@ const AddDriverForm = ({ id }) => {
     try {
       // Prepare the data to send
       const verificationData = {
+        ...formData,
+        ACvalidate,
+        PANvalidate,
         DLvalidate,
         RCvalidate,
         Vehiclevalidate,
-        Identityvalidate,
+        Identityvalidate : !!(ACvalidate && PANvalidate),
         bankaccvalidate,
       };
 
@@ -261,6 +270,8 @@ const AddDriverForm = ({ id }) => {
     return false;
   }
 
+  const [rotation, setRotation] = useState(0);
+
   return (
     <form onSubmit={handleSubmit}>
       {/* Modal */}
@@ -276,27 +287,31 @@ const AddDriverForm = ({ id }) => {
                 const [img1, img2] = getImageUrl(selectedDocument);
                 return (
                   <>
-                    {!img1 && (
+                    {(!img1 && !img2)&& (
                       <span className='text-4xl font-semibold text-blue-400 py-[10rem] px-[18rem]'> Hang On Loading docs... </span>
                     )}
+                    
                     {img1 && (
                       <img
                         src={img1}
                         alt={`${selectedDocument} Front not uploaded yet!!!`}
-                        className="w-1/2 h-96 object-cover border"
+                        className="w-1/2 h-96 object-contain"
+                        style={{ transform: `rotate(${rotation}deg)` }}
                       />
                     )}
                     {img2 && (
                       <img
                         src={img2}
                         alt={`${selectedDocument} Back not uploaded yet!!!`}
-                        className="w-1/2 h-96 object-cover border"
+                        className="w-1/2 h-96 object-contain"
+                        style={{ transform: `rotate(${rotation}deg)` }}
                       />
                     )}
                   </>
                 );
               })()}
             </div>
+
             <div className="flex justify-between">
               <div className=' flex gap-3 mt-4'>
                 <button
@@ -315,6 +330,12 @@ const AddDriverForm = ({ id }) => {
                   Reject
                 </button>
               </div>
+              <div className='mt-4'>
+                 <button className='bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-xl' type='button' onClick={() => setRotation((prev) => (prev + 90)%360)}>
+                  <MdOutlineRotate90DegreesCw className='w-8 h-8'/>
+                  </button>
+              </div>
+            
               <button
                 type='button'
                 className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded mt-4"
@@ -395,7 +416,7 @@ const AddDriverForm = ({ id }) => {
                 <button
                   type='button'
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={() => setBankaccvalidate(true)}
+                  onClick={() => toggleBankValidate()}
                 >
                   Verify Bank Account
                 </button><span className={`${(bankaccvalidate) ? "text-green-400" : "text-red-500"} ml-4 font-semibold`}>{(bankaccvalidate) ? " ✅ Verified" : "❌ Not verified"}</span>
@@ -433,7 +454,7 @@ const AddDriverForm = ({ id }) => {
                     {label} <span className="text-red-500">*</span>
                   </label>
                   <input
-                    disabled
+                    // disabled
                     type={type}
                     name={name}
                     value={formData[name]}
@@ -458,7 +479,7 @@ const AddDriverForm = ({ id }) => {
                     {label} <span className="text-red-500">*</span>
                   </label>
                   <input
-                    disabled
+                    // disabled
                     type={type}
                     name={name}
                     value={formData[name]}
@@ -474,7 +495,7 @@ const AddDriverForm = ({ id }) => {
                     <option value="+91">+91</option>
                   </select>
                   <input
-                    disabled
+                    // disabled
                     maxLength={10}
                     name="phonenumber"
                     value={formData.phonenumber}

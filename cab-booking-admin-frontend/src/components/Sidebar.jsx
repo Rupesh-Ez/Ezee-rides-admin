@@ -246,7 +246,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to="/riderequest/new"
+                to="/riderequest/New"
                 className="flex items-center space-x-3 p-2 hover:bg-blue-50 hover:text-blue-600 rounded"
               >
                 <FaList />
@@ -255,7 +255,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to="/riderequest/confrim"
+                to="/riderequest/Confirm"
                 className="flex items-center space-x-3 p-2 hover:bg-blue-50 hover:text-blue-600 rounded"
               >
                 <FaList />

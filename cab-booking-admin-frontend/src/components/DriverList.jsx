@@ -182,7 +182,7 @@ const DriverList = ({ pending }) => {
                             <th className="py-6 px-2 border-b-2 border-blue-200">Email</th>
                             <th className="py-6 px-2 border-b-2 border-blue-200">Contact No</th>
                             {/* <th className="py-6 px-2 border-b-2 border-blue-200">Date Created</th> */}
-                            <th className="py-6 px-2 border-b-2 border-blue-200">DOB</th>
+                            <th className="py-6 px-2 border-b-2 border-blue-200">Joined On</th>
                             <th className="py-6 px-2 border-b-2 border-blue-200">Vechicle</th>
                             <th className="py-6 px-2 border-b-2 border-blue-200">Verification</th>
                             <th className="py-6 px-2 border-b-2 border-blue-200">Action</th>
@@ -197,7 +197,7 @@ const DriverList = ({ pending }) => {
                                 <td className="px-2 py-4 border-b-2 border-blue-200 ">{driver.phonenumber}</td>
 
                                 {/* <td className="px-2 py-4 border-b-2 border-blue-200 ">{driver.createdAt}</td> */}
-                                <td className="px-2 py-4 border-b-2 border-blue-200 ">{driver.dateOfBirth}</td>
+                                <td className="px-2 py-4 border-b-2 border-blue-200 ">{driver.createdAt.split('T')[0]}</td>
                                 <td className="px-2 py-4 border-b-2 border-blue-200 ">{driver.vehicletype}</td>
                                 <td className={`px-2 py-4 border-b-2 border-blue-200 ${driver.profilevalidate == false ? 'text-red-500' : 'text-green-500'}`}>{(driver.profilevalidate == true) ? "Verified" : "Not verified"}</td>
                                 <td className="px-2 py-4 border-b-2 border-blue-200 ">

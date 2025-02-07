@@ -237,10 +237,9 @@ const AddPushNotificationForm = () => {
                     {/* Message */}
                     <div>
                         <label className="block text-sm font-medium mb-1">
-                            Message <span className="text-red-500">*</span>
+                            Message 
                         </label>
                         <textarea
-                            required
                             name="message"
                             placeholder="Message"
                             value={form.message}

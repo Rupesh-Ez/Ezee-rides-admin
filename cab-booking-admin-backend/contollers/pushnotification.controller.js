@@ -15,7 +15,7 @@ export const saveNotification = async (req, res) => {
 
 
         // Validate required fields
-        if (!title || !message) {
+        if (!title) {
             return res.status(400).json({
                 success: false,
                 message: "Title and message are required",

@@ -39,6 +39,11 @@ const serviceSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
+    perDistanceLarge: {
+        type: Number,
+        required: false,
+        min: 0,
+    },
     perMinuteWait: {
         type: Number,
     },

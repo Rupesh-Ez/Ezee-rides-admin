@@ -97,7 +97,7 @@ const UpdateCoupon = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const res = await axios.post(`http://localhost:8000/api/coupon/updatecoupon/${id}`, formData, {
+        const res = await axios.post(`${BACKEND_API_ENDPOINT}/api/coupon/updatecoupon/${id}`, formData, {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
         });
