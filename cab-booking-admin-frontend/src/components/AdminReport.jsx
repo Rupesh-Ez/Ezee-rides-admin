@@ -156,7 +156,7 @@ const AdminReport = () => {
                     <tbody>
                         {displayedUsers.map((report, index) => (
                             <tr key={index} className="hover:bg-gray-50">
-                                <td className="py-1 border-b-2 border-blue-200 text-center">{report.userId.substring(0, 5)}...</td>
+                                <td className="py-1 border-b-2 border-blue-200 text-center">{index}</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">{report.userName}</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">{report.driverName}</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">{report.createdAt.split('T')[0]}</td>
