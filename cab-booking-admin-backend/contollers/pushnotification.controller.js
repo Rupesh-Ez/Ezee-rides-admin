@@ -173,7 +173,7 @@ export const updateNotification = async (req, res) => {
                     : undefined,
     
     
-                large_icon: 'https://drive.google.com/file/d/1lSKsJPSScCNE9KKXUiGBGH37lKHv9ACX/view?usp=sharing'
+                large_icon: 'https://drive.google.com/file/d/1lSKsJPSScCNE9KKXUiGBGH37lKHv9ACX/view'
             };
 
             const payloadUser = {
@@ -190,7 +190,7 @@ export const updateNotification = async (req, res) => {
                     : undefined,
     
     
-                large_icon: 'https://drive.google.com/file/d/1lSKsJPSScCNE9KKXUiGBGH37lKHv9ACX/view?usp=sharing'
+                large_icon: 'https://drive.google.com/file/d/1lSKsJPSScCNE9KKXUiGBGH37lKHv9ACX/view'
             };
             if(existingNotification.customer===true){
                 await axios.post('https://onesignal.com/api/v1/notifications', payloadUser, {
