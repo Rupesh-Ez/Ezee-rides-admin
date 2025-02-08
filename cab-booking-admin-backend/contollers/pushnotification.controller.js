@@ -173,7 +173,7 @@ export const updateNotification = async (req, res) => {
                     : undefined,
     
     
-                large_icon: 'https://ezee-rides-admin.onrender.com/assets/car-BfQtHGkT.png'
+                large_icon: 'https://drive.google.com/file/d/1lSKsJPSScCNE9KKXUiGBGH37lKHv9ACX/view?usp=sharing'
             };
 
             const payloadUser = {
@@ -190,7 +190,7 @@ export const updateNotification = async (req, res) => {
                     : undefined,
     
     
-                large_icon: 'https://ezee-rides-admin.onrender.com/assets/car-BfQtHGkT.png'
+                large_icon: 'https://drive.google.com/file/d/1lSKsJPSScCNE9KKXUiGBGH37lKHv9ACX/view?usp=sharing'
             };
             if(existingNotification.customer===true){
                 await axios.post('https://onesignal.com/api/v1/notifications', payloadUser, {
