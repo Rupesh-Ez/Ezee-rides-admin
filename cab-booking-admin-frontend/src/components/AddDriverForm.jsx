@@ -190,8 +190,8 @@ const AddDriverForm = ({ id }) => {
           setIdentityrejected(response.data.data.Identityrejected);
           setBankaccvalidate(response.data.data.bankaccvalidate);
           
-          setACverified(response.data.data.ACvalidate);
-          setPANverified(response.data.data.PANvalidate);
+          setACverified(response.data.data.Identityvalidate);
+          setPANverified(response.data.data.Identityvalidate);
           
 
           setFormData(response.data.data);
