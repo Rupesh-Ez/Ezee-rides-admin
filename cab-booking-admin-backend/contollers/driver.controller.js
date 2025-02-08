@@ -90,14 +90,17 @@ export const updateVerificationStatuses = async (req, res) => {
   try {
     const { id } = req.params;
     
-    // Extract verification status fields and form data from the request body
     const {
       ACvalidate,
       PANvalidate,
       DLvalidate,
+      DLrejected,
       RCvalidate,
+      RCrejected,
       Vehiclevalidate,
+      Vehiclerejected,
       Identityvalidate,
+      Identityrejected,
       bankaccvalidate,
       fullname,
       email,
@@ -115,10 +118,10 @@ export const updateVerificationStatuses = async (req, res) => {
       licensenumber,
       accountHolderName,
       accountNumber,
-      ifscCode
+      ifscCode,
+      filesObjestIds
     } = req.body;
 
-    // Validate that the required `id` is provided
     if (!id) {
       return res.status(400).json({
         success: false,
@@ -126,7 +129,53 @@ export const updateVerificationStatuses = async (req, res) => {
       });
     }
 
-    // Prepare verification status updates
+    // Find the driver first
+    const driver = await DriverModel.findOne({ phonenumber: id });
+    
+    if (!driver) {
+      return res.status(404).json({
+        success: false,
+        message: "Driver not found",
+      });
+    }
+
+    // Create a new files array by filtering out rejected documents
+    let updatedFiles = driver.files.filter(fileObj => {
+      const fileKey = Object.keys(fileObj)[0];
+      
+      if ((DLrejected || Vehiclerejected) && (fileKey === 'DL Upload Back' || fileKey === 'DL Upload Front' || fileKey === 'Upload License Plate')) {
+        return false;
+      }
+      if (RCrejected && (fileKey === 'RC Upload Back' || fileKey === 'RC Upload Front')) {
+        return false;
+      }
+      
+      if (Identityrejected && (
+        fileKey === 'Aadhaar Upload Front' || 
+        fileKey === 'Aadhaar Upload Back' || 
+        fileKey === 'Pan Card Upload Front'
+      )) {
+        return false;
+      }
+      return true;
+    });
+
+    // Delete the actual files from FileModel if needed
+    if (DLrejected || Vehiclerejected) {
+      await FileModel.findByIdAndDelete(filesObjestIds['DL Upload Back']);
+      await FileModel.findByIdAndDelete(filesObjestIds['DL Upload Front']);
+      await FileModel.findByIdAndDelete(filesObjestIds['Upload License Plate']);
+    }
+    if (RCrejected) {
+      await FileModel.findByIdAndDelete(filesObjestIds['RC Upload Back']);
+      await FileModel.findByIdAndDelete(filesObjestIds['RC Upload Front']);
+    }
+    if (Identityrejected) {
+      await FileModel.findByIdAndDelete(filesObjestIds['Aadhaar Upload Front']);
+      await FileModel.findByIdAndDelete(filesObjestIds['Aadhaar Upload Back']);
+      await FileModel.findByIdAndDelete(filesObjestIds['Pan Card Upload Front']);
+    }
+
     const updates = {
       fullname,
       email,
@@ -145,21 +194,21 @@ export const updateVerificationStatuses = async (req, res) => {
       accountHolderName,
       accountNumber,
       ifscCode,
-      ACvalidate: !!ACvalidate,
-      PANvalidate: !!PANvalidate,
-      DLvalidate: !!DLvalidate, 
-      DLrejected: !DLvalidate,
+      ACvalidate: !!Identityvalidate,
+      PANvalidate: !!Identityvalidate,
+      DLvalidate: !!(DLvalidate && Vehiclevalidate),
+      DLrejected: !(DLvalidate && Vehiclevalidate),
       RCvalidate: !!RCvalidate,
-      RCrejected: !RCvalidate,
-      Vehiclevalidate: !!Vehiclevalidate,
-      Vehiclerejected: !Vehiclevalidate,
+      RCrejected: !!RCrejected,
+      Vehiclevalidate: !!(DLvalidate && Vehiclevalidate),
+      Vehiclerejected: !(DLvalidate && Vehiclevalidate),
       Identityvalidate: !!Identityvalidate,
-      Identityrejected: !Identityvalidate,
+      Identityrejected: !!Identityrejected,
       bankaccvalidate: !!bankaccvalidate,
       bankaccrejected: !bankaccvalidate,
+      files: updatedFiles // Add the updated files array to the updates
     };
 
-    // If all verifications are true, mark profile as validated
     if (DLvalidate && RCvalidate && Vehiclevalidate && Identityvalidate && bankaccvalidate) {
       updates.profilevalidate = true;
       updates.profilerejected = false;
@@ -168,20 +217,11 @@ export const updateVerificationStatuses = async (req, res) => {
       updates.profilerejected = true;
     }
 
-    // Update the driver details and verification statuses in the database
     const updatedDriver = await DriverModel.findOneAndUpdate(
-      { phonenumber: id }, // Find driver by phone number
-      { $set: updates },   // Apply updates
-      { new: true, runValidators: true } // Return updated document
+      { phonenumber: id },
+      { $set: updates },
+      { new: true, runValidators: true }
     );
-
-    // Check if the driver was found and updated
-    if (!updatedDriver) {
-      return res.status(404).json({
-        success: false,
-        message: "Driver not found",
-      });
-    }
 
     return res.status(200).json({
       success: true,
@@ -210,26 +250,45 @@ export const deleteDriver = async (req, res) => {
         message: 'Driver ID is required'
       });
     }
-    console.log(_id);
-    
 
-    // Find and delete the region
-    const deletedDriver = await DriverModel.findByIdAndDelete(_id);
+    // Find the driver first to get file IDs
+    const driver = await DriverModel.findById(_id);
 
-    // Check if region was actually found and deleted
-    if (!deletedDriver) {
+    if (!driver) {
       return res.status(404).json({
         success: false,
         message: 'Driver not found'
       });
     }
+
+    // Extract all fileIds from the files array
+    const fileIds = driver.files.map(fileObj => {
+      // Get the first (and only) key of the object
+      const key = Object.keys(fileObj)[0];
+      // Return the fileId from the nested object
+      return fileObj[key].fileId;
+    });
+
+    // Delete all files
+    for (const fileId of fileIds) {
+      try {
+        await FileModel.findByIdAndDelete(fileId);
+      } catch (error) {
+        console.error(`Error deleting file ${fileId}:`, error);
+        // Continue with other deletions even if one fails
+      }
+    }
+
+    // Delete the driver
+    const deletedDriver = await DriverModel.findByIdAndDelete(_id);
+
     res.status(200).json({
       success: true,
-      message: 'driver deleted successfully',
+      message: 'Driver and associated files deleted successfully',
+      deletedFilesCount: fileIds.length
     });
 
   } catch (error) {
-    // Handle any unexpected errors
     console.error('Error deleting driver:', error);
     res.status(500).json({
       success: false,

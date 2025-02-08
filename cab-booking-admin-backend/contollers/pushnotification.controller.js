@@ -153,46 +153,67 @@ export const updateNotification = async (req, res) => {
                 runValidators: true
             }
         );
-        console.log(existingNotification.image);
 
         // Ensure apiKey is correctly defined
-        const apiKey = 'os_v2_app_2gmkvjaa4jg53glbcw6jtpbvksarupha765u2c4gbzxqowwakkfwmliy5dhmjpi2l3yiyk7q7z5f7fpyfve5k6nphbuhnyyl7b62rei';
-        if (!apiKey) {
-            return res.status(500).json({
-                message: "OneSignal API Key not configured",
-                success: false,
-            });
-        }
-
-        const payload = {
-            app_id: 'd198aaa4-00e2-4ddd-9961-15bc99bc3554',
-            included_segments: ['All'],
-            contents: { en: existingNotification.message || "Default message" },
-            headings: { en: existingNotification.title || "Notification" },
-            data: {
-                notification_id: id,
-                type: "general"
-            },
-            big_picture: existingNotification.image
-                ? existingNotification.image.replace(/\/file\/d\/(.*?)\/view.*/, '/uc?export=view&id=$1')
-                : undefined,
-
-
-            // large_icon: 'https://images.unsplash.com/photo-1531666692006-da240046a095?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-        };
+        const apiKeyDriver = 'os_v2_app_2btlernccfblvabccvqmqw6etje5vxr6dpnedk5px35qh4do4pvgbztc3gntq6pmoymmwh6jneqvatabigyhivus6qnjkasa6esxnoi';
+        const apiKeyUser = 'os_v2_app_7y477ckko5hx3h2ouhdvtuwgsh2g4ucm2jpeu2vt5nue3do4tkl7evkpkjnubrwatlj46h6jyg4rvilcrzviqf5nnj5mkjcugbgfo3a';
 
         try {
-            const response = await axios.post('https://onesignal.com/api/v1/notifications', payload, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Basic ${apiKey}`
-                }
-            });
+            const payloadDriver = {
+                app_id: 'd066b245-a211-42ba-8022-1560c85bc49a',
+                included_segments: ['All'],
+                contents: { en: existingNotification.message || "Ezee Rider" },
+                headings: { en: existingNotification.title || "Notification" },
+                data: {
+                    notification_id: id,
+                    type: "general"
+                },
+                big_picture: existingNotification.image
+                    ? existingNotification.image.replace(/\/file\/d\/(.*?)\/view.*/, '/uc?export=view&id=$1')
+                    : undefined,
+    
+    
+                large_icon: 'https://ezee-rides-admin.onrender.com/assets/car-BfQtHGkT.png'
+            };
+
+            const payloadUser = {
+                app_id: 'fe39ff89-4a77-4f7d-9f4e-a1c759d2c691',
+                included_segments: ['All'],
+                contents: { en: existingNotification.message || "Ezee Rider" },
+                headings: { en: existingNotification.title || "Notification" },
+                data: {
+                    notification_id: id,
+                    type: "general"
+                },
+                big_picture: existingNotification.image
+                    ? existingNotification.image.replace(/\/file\/d\/(.*?)\/view.*/, '/uc?export=view&id=$1')
+                    : undefined,
+    
+    
+                large_icon: 'https://ezee-rides-admin.onrender.com/assets/car-BfQtHGkT.png'
+            };
+            if(existingNotification.customer===true){
+                await axios.post('https://onesignal.com/api/v1/notifications', payloadUser, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Basic ${apiKeyUser}`
+                    }
+                });
+
+            }
+            if(existingNotification.driver===true){
+                await axios.post('https://onesignal.com/api/v1/notifications', payloadDriver, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Basic ${apiKeyDriver}`
+                    }
+                });
+
+            }
 
             return res.status(200).json({
                 message: "Notification Initiated successfully",
                 success: true,
-                responseData: response.data
             });
 
         } catch (axiosError) {

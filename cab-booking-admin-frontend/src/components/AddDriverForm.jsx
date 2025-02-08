@@ -9,9 +9,13 @@ const AddDriverForm = ({ id }) => {
   const [selectedDocument, setSelectedDocument] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [DLvalidate, setDLverified] = useState(false);
+  const [DLrejected, setDLrejected] = useState(false);
   const [RCvalidate, setRCverified] = useState(false);
+  const [RCrejected, setRCrejected] = useState(false);
   const [Vehiclevalidate, setVehicleverified] = useState(false);
+  const [Vehiclerejected, setVehiclerejected] = useState(false);
   const [Identityvalidate, setIdentityverified] = useState(false);
+  const [Identityrejected, setIdentityrejected] = useState(false);
   const [ACvalidate, setACverified] = useState(false);
   const [PANvalidate, setPANverified] = useState(false);
   const [bankaccvalidate, setBankaccvalidate] = useState(false);
@@ -94,10 +98,13 @@ const AddDriverForm = ({ id }) => {
   const handleVerify = () => {
     if (selectedDocument === "Driving Licence") {
       setDLverified(true);
+      setDLrejected(false);
     } else if (selectedDocument === "Registration Certificate") {
       setRCverified(true);
+      setRCrejected(false);
     } else if (selectedDocument === "Licence Plate") {
       setVehicleverified(true);
+      setVehiclerejected(false);
     } else if (selectedDocument === "Adhar Card") {
       setACverified(true);
     } else {
@@ -109,10 +116,13 @@ const AddDriverForm = ({ id }) => {
   const handleReject = () => {
     if (selectedDocument === "Driving Licence") {
       setDLverified(false);
+      setDLrejected(true);
     } else if (selectedDocument === "Registration Certificate") {
+      setRCrejected(true);
       setRCverified(false);
     } else if (selectedDocument === "Licence Plate") {
       setVehicleverified(false);
+      setVehiclerejected(true);
     } else if (selectedDocument === "Adhar Card") {
       setACverified(false);
     } else {
@@ -171,9 +181,13 @@ const AddDriverForm = ({ id }) => {
         if (response.data.success) {
           fillFilesDataObjectId(response.data.data.files);
           setDLverified(response.data.data.DLvalidate);
+          setDLrejected(response.data.data.DLrejected);
           setRCverified(response.data.data.RCvalidate);
+          setRCrejected(response.data.data.RCrejected);
           setVehicleverified(response.data.data.Vehiclevalidate);
+          setVehiclerejected(response.data.data.Vehiclerejected);
           setIdentityverified(response.data.data.Identityvalidate);
+          setIdentityrejected(response.data.data.Identityrejected);
           setBankaccvalidate(response.data.data.bankaccvalidate);
           
           setACverified(response.data.data.ACvalidate);
@@ -222,10 +236,15 @@ const AddDriverForm = ({ id }) => {
         ACvalidate,
         PANvalidate,
         DLvalidate,
+        DLrejected,
         RCvalidate,
+        RCrejected,
         Vehiclevalidate,
+        Vehiclerejected,
         Identityvalidate : !!(ACvalidate && PANvalidate),
+        Identityrejected : !(ACvalidate && PANvalidate),
         bankaccvalidate,
+        filesObjestIds,
       };
 
 
