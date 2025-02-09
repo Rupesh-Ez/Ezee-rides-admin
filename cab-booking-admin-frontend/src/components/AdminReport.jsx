@@ -163,7 +163,7 @@ const AdminReport = () => {
                                 <td className="py-1 border-b-2 border-blue-200 text-center">{report.createdAt.split('T')[0]}</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">₹ {report.totalFare || 0}</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">₹ {report.commission || 0}</td>
-                                <td className="py-1 border-b-2 border-blue-200 text-center">₹ {report.driverEarnings || 0}</td>
+                                <td className="py-1 border-b-2 border-blue-200 text-center">₹ {report.driverEarning || 0}</td>
                             </tr>
                         ))}
                     </tbody>
