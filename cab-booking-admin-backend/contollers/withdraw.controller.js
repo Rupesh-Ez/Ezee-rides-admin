@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
+import RideModel from './ride.controller.js'
 
 const withdrawSchema = new mongoose.Schema({}, { strict: false });
 const WithdrawModel = mongoose.model('earning', withdrawSchema, 'earning');
 
 const EarningSchema = new mongoose.Schema({}, { strict: false });
 const EarningModel = mongoose.model('admincollections', EarningSchema, 'admincollections');
+
+// const rideSchema = new mongoose.Schema({}, { strict: false });
+// const RideModel = mongoose.model('rides', rideSchema, 'rides');
 
 
 export const getAllWithdrawals = async (req, res) => {
@@ -92,7 +96,7 @@ export const getMonthlyEarnings = async (req, res) => {
         const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
         const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
 
-        const earnings = await EarningModel.aggregate([
+        const earnings = await RideModel.aggregate([
             // Match documents created in the current month
             {
                 $match: {
@@ -124,7 +128,7 @@ export const getMonthlyEarnings = async (req, res) => {
 };
 export const getTotalEarnings = async (req, res) => {
     try {
-        const earnings = await EarningModel.aggregate([
+        const earnings = await RideModel.aggregate([
             {
                 $group: {
                     _id: null,
@@ -149,7 +153,7 @@ export const getMonthWiseEarnings = async (req, res) => {
     try {
         const currentYear = new Date().getFullYear();
 
-        const earnings = await EarningModel.aggregate([
+        const earnings = await RideModel.aggregate([
             // Match documents created in the current year
             {
                 $match: {

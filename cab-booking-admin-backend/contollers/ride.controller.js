@@ -48,3 +48,5 @@ export const getLatestRides = async (req, res) => {
     }
 
 };
+
+export default RideModel;

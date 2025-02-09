@@ -80,8 +80,8 @@ const HeroSection = () => {
         const complaintCount = complaintResponse.data.count || 0;
         const rideCount = rideResponse.data.count || 0;
         const withdrawCount = withdrawcount.data.count || 0;
-        const monthlyCount = monthlyEarningResponse.data.count || 0;
-        const totalCount = totalEarningResponse.data.count || 0;
+        const monthlyCount = monthlyEarningResponse.data.count.toFixed(1) || 0;
+        const totalCount = totalEarningResponse.data.count.toFixed(1) || 0;
 
         // Update the cardsData state
         setCardsData((prevCardsData) =>
