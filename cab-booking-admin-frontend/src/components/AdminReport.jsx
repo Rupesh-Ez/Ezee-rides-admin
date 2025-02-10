@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BACKEND_API_ENDPOINT from '../utils/constants.js';
+import FileSaver from "file-saver";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 const AdminReport = () => {
     const [reports, setReports] = useState([]);
+
+    const [showDialog, setShowDialog] = useState(false);
+    const [filter, setFilter] = useState("weekly"); // Default selection
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
 
     useEffect(() => {
         const fetchReports = async () => {
@@ -32,6 +39,35 @@ const AdminReport = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [entriesPerPage, setEntriesPerPage] = useState(10);
     const [displayedUsers, setDisplayedUsers] = useState([]);
+
+    const exportToExcel = async (filter, startDate = "", endDate = "") => {
+        try {
+            console.log(filter);
+            console.log(typeof filter);
+            let url = `${BACKEND_API_ENDPOINT}/api/rides/export-excel?filter=${filter}`;
+
+            // If custom date range is selected, append startDate and endDate as query parameters
+            if (filter === "custom" && startDate && endDate) {
+                url = `${BACKEND_API_ENDPOINT}/api/rides/export-excel?filter=custom&startDate=${startDate}&endDate=${endDate}`;
+            }
+            console.log(url);
+
+            const response = await axios.get(url, {
+                responseType: "blob", // Important to handle file data
+            });
+
+            // Create a blob and download the file
+            const blob = new Blob([response.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+
+            // Save the file with a dynamic name based on filter type
+            FileSaver.saveAs(blob, `ride_report_${filter}.xlsx`);
+        } catch (error) {
+            console.error("Error exporting data:", error);
+        }
+    };
+
 
     useEffect(() => {
         setUsers(reports);
@@ -125,20 +161,87 @@ const AdminReport = () => {
                 <h2 className="text-3xl py-4 font-semibold px-2">Admin Earning Report</h2>
             </div>
             <div className='bg-white py-4 px-2'>
-                <div className="flex items-center mb-4">
-                    <label className="mr-2">Show</label>
-                    <select
-                        value={entriesPerPage}
-                        onChange={handleEntriesChange}
-                        className="border p-2 rounded"
-                    >
-                        <option value={5}>5</option>
-                        <option value={10}>10</option>
-                        <option value={15}>50</option>
-                        <option value={20}>100</option>
-                    </select>
-                    <label className="ml-2">entries</label>
+                <div className="flex items-center mb-4 justify-between">
+                    <div>
+
+                        <label className="mr-2">Show</label>
+                        <select
+                            value={entriesPerPage}
+                            onChange={handleEntriesChange}
+                            className="border p-2 rounded"
+                        >
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={15}>50</option>
+                            <option value={20}>100</option>
+                        </select>
+                        <label className="ml-2">entries</label>
+                    </div>
+                    <div className="flex gap-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded cursor-pointer" onClick={() => setShowDialog(true)}>
+                        <RiFileExcel2Line className='w-6 h-6'/>
+                        <button>
+                            Export to Excel
+                        </button>
+                    </div>
                 </div>
+
+                {/* Dialog / Modal */}
+                {showDialog && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                        <div className="bg-white p-6 rounded shadow-lg w-96">
+                            <h2 className="text-lg font-bold mb-4">Select Report Type</h2>
+
+                            {/* Select Report Type */}
+                            <select
+                                value={filter}
+                                onChange={(e) => setFilter(e.target.value)}
+                                className="w-full p-2 border rounded"
+                            >
+                                <option value="weekly">Last Week Report</option>
+                                <option value="monthly">Last Month Report</option>
+                                <option value="custom">Custom Date Range</option>
+                            </select>
+
+                            {/* Custom Date Pickers */}
+                            {filter === "custom" && (
+                                <div className="mt-4">
+                                    <label className="block font-semibold">Start Date:</label>
+                                    <input
+                                        type="date"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    />
+
+                                    <label className="block font-semibold mt-2">End Date:</label>
+                                    <input
+                                        type="date"
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    />
+                                </div>
+                            )}
+
+                            {/* Buttons */}
+                            <div className="flex justify-end mt-4">
+                                <button
+                                    onClick={() => {setShowDialog(false); setStartDate(""); setEndDate("");}}
+                                    className="mr-2 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={() => exportToExcel(filter, startDate, endDate)}
+                                    className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer"
+                                    disabled={filter === "custom" && (!startDate || !endDate)}
+                                >
+                                    Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <table className="w-full border-collapse border border-blue-200">
                     <thead>
@@ -162,8 +265,8 @@ const AdminReport = () => {
                                 <td className="py-1 border-b-2 border-blue-200 text-center">{report.createdAt.split('T')[0]}</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">{report.createdAt.split('T')[0]}</td>
                                 <td className="py-1 border-b-2 border-blue-200 text-center">₹ {report.totalFare || 0}</td>
-                                <td className="py-1 border-b-2 border-blue-200 text-center">₹ {report.commission || 0}</td>
-                                <td className="py-1 border-b-2 border-blue-200 text-center">₹ {report.driverEarning || 0}</td>
+                                <td className="py-1 border-b-2 border-blue-200 text-center">₹ {report.commission.toFixed(2) || 0}</td>
+                                <td className="py-1 border-b-2 border-blue-200 text-center">₹ {report.driverEarning.toFixed(2) || 0}</td>
                             </tr>
                         ))}
                     </tbody>

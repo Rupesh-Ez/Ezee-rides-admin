@@ -1,15 +1,10 @@
 import mongoose from "mongoose";
 import RideModel from './ride.controller.js'
+import DriverModel from './driver.controller.js'
+import { withdrawRequests } from "../models/withdrawRequest.model.js";
 
 const withdrawSchema = new mongoose.Schema({}, { strict: false });
 const WithdrawModel = mongoose.model('earning', withdrawSchema, 'earning');
-
-const EarningSchema = new mongoose.Schema({}, { strict: false });
-const EarningModel = mongoose.model('admincollections', EarningSchema, 'admincollections');
-
-// const rideSchema = new mongoose.Schema({}, { strict: false });
-// const RideModel = mongoose.model('rides', rideSchema, 'rides');
-
 
 export const getAllWithdrawals = async (req, res) => {
     try {
@@ -36,12 +31,31 @@ export const updateRequest = async (req, res) => {
             });
         }
 
+        const driver = await DriverModel.findOne({phonenumber:id});
+        
+        if(!driver){
+            return res.status(400).json({
+                success: false,
+                message: "Driver not Found!! Might be Deleted.",
+            });
+        }
+
         if (balance == null || request == null) {
             return res.status(400).json({
                 success: false,
                 message: "Both balance and request are required.",
             });
         }
+        const fullname = driver.fullname;
+        const email = driver.email;
+
+        await withdrawRequests.create({
+            phoneNo: id,
+            name :fullname,
+            email: email,
+            balance,
+            request
+        })
 
         const updates = {
             balance: balance - request,
@@ -65,7 +79,7 @@ export const updateRequest = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Withdrawal request updated successfully.",
-            data: updatedRequest,
+            // data: updatedRequest,
         });
     } catch (err) {
         console.error("Error updating withdrawal request:", err);

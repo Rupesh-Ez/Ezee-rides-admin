@@ -297,3 +297,5 @@ export const deleteDriver = async (req, res) => {
     });
   }
 };
+
+export default DriverModel;

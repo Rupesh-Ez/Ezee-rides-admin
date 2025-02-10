@@ -68,3 +68,5 @@ export const deleteCustomer = async (req, res) => {
       });
     }
   };
+
+  export default UserModel;

@@ -169,7 +169,7 @@ const WithdrawReport = () => {
                                         <li><strong>Email: </strong> <span >{driverDetails.email}</span></li>
                                         <li><strong>Phone Number : </strong> <span >{driverDetails.phonenumber}</span></li>
                                         <li><strong>Gender : </strong> <span >{driverDetails.gender}</span></li>
-                                        <li><strong>Created At: </strong> <span >{selectedRequestDetails.createdAt.split("T")[0]} {selectedRequestDetails.createdAt.split("T")[1]}</span></li>
+                                        <li><strong>Joined On : </strong> <span >{selectedRequestDetails.createdAt.split("T")[0]} {selectedRequestDetails.createdAt.split("T")[1]}</span></li>
                                         <li><strong>DOB : </strong> <span >{driverDetails.dateOfBirth}</span></li>
                                         <li><strong className='text-blue-800'>Account holder name : </strong> <span ></span>{driverDetails.accountHolderName}</li>
                                         <li><strong className='text-blue-800'>Bank IFSC Code : </strong> <span ></span>{driverDetails.ifscCode}</li>
