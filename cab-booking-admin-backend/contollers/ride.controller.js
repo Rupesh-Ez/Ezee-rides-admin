@@ -6,7 +6,7 @@ const RideModel = mongoose.model('rides', rideSchema, 'rides');
 
 export const getAllRides = async (req, res) => {
     try {
-        const rides = await RideModel.find({});
+        const rides = await RideModel.find({}).sort({ createdAt: -1 });
         return res.status(200).json({
             success: true,
             message: 'Rides fetched successfully',

@@ -49,7 +49,7 @@ const RideRequestList = ({ status }) => {
     const openRide = () => setIsRideOpen(true);
     const closeRide = () => setIsRideOpen(false);
 
-    const applyFilter = () =>{
+    const applyFilter = () => {
         let filteredUsers = rideRequest;
 
         // Apply start date filter
@@ -198,7 +198,7 @@ const RideRequestList = ({ status }) => {
                                     <ul className="space-y-1 mt-2 grid grid-cols-2 gap-x-10">
                                         <li><strong>ID :</strong> {selectedRideDetails._id}</li>
                                         <li><strong>Customer :</strong> {selectedRideDetails.userName}</li>
-                                    
+
                                         <li><strong>Driver :</strong> {selectedRideDetails.driverName}</li>
                                         <li><strong>Date :</strong> {selectedRideDetails.createdAt?.split("T")[0]}</li>
                                         <li><strong>Time :</strong> {selectedRideDetails.createdAt?.split("T")[1]}</li>
@@ -339,29 +339,40 @@ const RideRequestList = ({ status }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {displayedUsers.map((request, index) => (
-                            <tr key={request._id} className="hover:bg-gray-50 text-center">
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{(currentPage - 1) * entriesPerPage + index + 1}</td>
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.userName}</td>
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.driverName}</td>
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.createdAt?.split("T")[0]}</td>
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.createdAt?.split("T")[1].split(".")[0]}</td>
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.currentAddress.substring(0,30)}...</td>
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.destinationAddress.substring(0,30)}...</td>
-                                {/* <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.payment}</td>
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.invoice}</td> */}
+                        {displayedUsers.map((request, index) => {
+                            // Convert UTC to IST
+                            const createdAtUTC = new Date(request.createdAt);
+                            const createdAtIST = new Date(createdAtUTC.getTime() + (5.5 * 60 * 60 * 1000));
 
-                                <td className={`px-1 py-4 border-b-2 border-blue-200 ${request.status === 'Cancelled' ? 'text-red-500' : request.status === ('booked' || 'new') ? 'text-blue-500' : 'text-green-500'}`}>{request.status}</td>
+                            // Extract Date and Time in IST
+                            const dateIST = createdAtIST.toISOString().split("T")[0];
+                            const timeIST = createdAtIST.toISOString().split("T")[1].split(".")[0];
 
-                                <td className="px-1 py-4 border-b-2 border-blue-200 ">
-                                    <button className="text-blue-600 mx-1 font-semibold text-xl" onClick={()=>{
-                                        setSelectedRideDetails(request);
-                                        openRide();
-                                    }}><BsFillEyeFill/></button>
-                                </td>
-                            </tr>
-                        ))}
+                            return (
+                                <tr key={request._id} className="hover:bg-gray-50 text-center">
+                                    <td className="px-1 py-4 border-b-2 border-blue-200 ">{(currentPage - 1) * entriesPerPage + index + 1}</td>
+                                    <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.userName}</td>
+                                    <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.driverName}</td>
+                                    <td className="px-1 py-4 border-b-2 border-blue-200 ">{dateIST}</td>
+                                    <td className="px-1 py-4 border-b-2 border-blue-200 ">{timeIST}</td>
+                                    <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.currentAddress.substring(0, 20)}...</td>
+                                    <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.destinationAddress.substring(0, 20)}...</td>
+
+                                    <td className={`px-1 py-4 border-b-2 border-blue-200 ${request.status === 'Cancelled' ? 'text-red-500' : request.status === ('booked' || 'new') ? 'text-blue-500' : 'text-green-500'}`}>{request.status}</td>
+
+                                    <td className="px-1 py-4 border-b-2 border-blue-200 ">
+                                        <button className="text-blue-600 mx-1 font-semibold text-xl" onClick={() => {
+                                            setSelectedRideDetails(request);
+                                            openRide();
+                                        }}>
+                                            <BsFillEyeFill />
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
+
                 </table>
                 <div className='flex items-center justify-between p-4'>
                     <div>
