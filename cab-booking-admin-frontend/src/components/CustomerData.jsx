@@ -35,6 +35,7 @@ const CustomerData = () => {
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchText, setSearchText] = useState("");
     const [selectedRideDetails, setSelectedRideDetails] = useState({});
     const [users, setUsers] = useState(customer);
     const [currentPage, setCurrentPage] = useState(1);
@@ -162,6 +163,40 @@ const CustomerData = () => {
 
         return pageButtons;
     };
+    const handleSearch = async () => {
+        if (!searchText.trim()) {
+            alert('Please enter a number');
+            return;
+        }
+
+        // Check if the input is a valid number
+        if (isNaN(searchText) || !Number.isInteger(Number(searchText)) || searchText.length != 10) {
+            alert('Please enter a valid 10 digit number');
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `${BACKEND_API_ENDPOINT}/api/customer/getcustomerbyid`,
+                { phoneno: searchText },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  withCredentials: true,
+                }
+              );
+
+            setDisplayedUsers([response.data.data]);
+
+            // Clear input after successful search
+            setSearchText('');
+
+        } catch (error) {
+            console.error('Error during search:', error);
+            alert(error.response?.data?.message || 'An error occurred while searching. Please try again.');
+        }
+    }
 
     return (
         <div className="p-4 bg-[#f7f9ff]">
@@ -283,21 +318,48 @@ const CustomerData = () => {
                     </select>
                     <button className="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
                 </div> */}
+                <div className='flex justify-between px-5'>
+                    <div className="flex items-center mb-4">
+                        <label className="mr-2">Show</label>
+                        <select
+                            value={entriesPerPage}
+                            onChange={handleEntriesChange}
+                            className="border p-2 rounded"
+                        >
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={15}>50</option>
+                            <option value={20}>100</option>
+                        </select>
+                        <label className="ml-2">entries</label>
+                    </div>
+                    <div className="flex items-center gap-3 p-4">
+                        <input
+                            className="w-64 px-2 py-1 text-lg border-2 border-gray-300 rounded-lg
+                   focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+                   outline-none transition-all duration-200
+                   shadow-sm hover:shadow-md"
+                            type="text"
+                            name="searchText"
+                            id="searchText"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            placeholder="Contact Number"
+                        />
+                        <button
+                            className="px-3 py-1 text-lg font-medium text-white 
+                   bg-blue-500 rounded-lg shadow-sm
+                   hover:bg-blue-600 hover:shadow-md 
+                   active:bg-blue-700 active:shadow-sm
+                   transition-all duration-200"
+                            onClick={handleSearch}
+                        >
+                            Search
+                        </button>
+                    </div>
 
-                <div className="flex items-center mb-4">
-                    <label className="mr-2">Show</label>
-                    <select
-                        value={entriesPerPage}
-                        onChange={handleEntriesChange}
-                        className="border p-2 rounded"
-                    >
-                        <option value={5}>5</option>
-                        <option value={10}>10</option>
-                        <option value={15}>50</option>
-                        <option value={20}>100</option>
-                    </select>
-                    <label className="ml-2">entries</label>
                 </div>
+
 
                 <table className="w-full border-collapse border border-blue-200">
                     <thead>

@@ -69,4 +69,42 @@ export const deleteCustomer = async (req, res) => {
     }
   };
 
+export const getCustomerById = async (req, res) => {
+    try {
+      const { phoneno } = req.body;
+  
+      // Validate that ID is provided
+      if (!phoneno) {
+        return res.status(400).json({
+          success: false,
+          message: 'Customer ID is required'
+        });
+      }
+      // Find and delete the region
+      const Customer = await UserModel.findOne({phoneNumber:phoneno});
+  
+      // Check if region was actually found and deleted
+      if (!Customer) {
+        return res.status(404).json({
+          success: false,
+          message: 'Customer not found'
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: 'Customer found successfully',
+        data:Customer
+      });
+  
+    } catch (error) {
+      // Handle any unexpected errors
+      console.error('Error fetching Customer:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error',
+        error: error.message
+      });
+    }
+  };
+
   export default UserModel;

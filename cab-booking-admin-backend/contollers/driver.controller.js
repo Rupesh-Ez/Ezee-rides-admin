@@ -40,6 +40,7 @@ export const getDriverById = async (req, res) => {
 
     const { id } = req.params;
     
+    
     const driver = await DriverModel.findOne({ phonenumber: id });
 
     if (!driver) {

@@ -135,7 +135,7 @@ const AddPushNotificationForm = () => {
 
 
                     {/* Schedule */}
-                    <div>
+                    {/* <div>
                         <div>
                             <label className="text-md font-medium mb-1">
                                 Schedule? <span className="text-red-500">*</span>
@@ -159,7 +159,7 @@ const AddPushNotificationForm = () => {
                             No
                         </div>
 
-                        {/* Schedule Details */}
+                        
                         <div
                             className={`transition-all duration-500 overflow-hidden ${form.schedule.enabled ? "max-h-[300px]" : "max-h-0"
                                 }`}
@@ -216,7 +216,7 @@ const AddPushNotificationForm = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Add Image */}
                     <div className="flex gap-4 items-center">

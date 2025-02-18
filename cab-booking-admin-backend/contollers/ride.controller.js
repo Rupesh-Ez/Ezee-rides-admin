@@ -64,9 +64,14 @@ export const getExcelReport = async (req, res) => {
             start.setMonth(start.getMonth() - 1);
             query.createdAt = { $gte: start };
         } else if (filter === "custom" && startDate && endDate) {
-            query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+            const endOfDay = new Date(endDate);
+            endOfDay.setHours(23, 59, 59, 999);  // Set to end of day (23:59:59.999)
+            query.createdAt = {
+                $gte: new Date(startDate),
+                $lte: endOfDay
+            };
         }
-
+        query.status = "booked";
         const data = await RideModel.find(query);
 
         const workbook = new ExcelJS.Workbook();
@@ -114,7 +119,7 @@ export const getExcelReport = async (req, res) => {
 
         // Add a blank row before summary
         worksheet.addRow([]);
-        
+
 
         // Add summary row
         const summaryRow = worksheet.addRow({

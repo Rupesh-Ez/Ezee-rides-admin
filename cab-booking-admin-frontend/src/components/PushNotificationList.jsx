@@ -291,12 +291,15 @@ const PushNotificationList = () => {
                         {displayedUsers.map((Notification, index) => (
                             <tr key={index} className="hover:bg-gray-50 text-center">
                                 <td className="px-2 py-4 border-b-2 border-blue-200 ">{(currentPage - 1) * entriesPerPage + index + 1}</td>
-                                <td className="px-2 py-4 border-b-2 border-blue-200 ">{Notification.title}</td>
+                        
+                                <td className="px-2 py-4 border-b-2 border-blue-200 ">{Notification.title.length > 30
+                                    ? Notification.title.slice(0, 30) + "...."
+                                    : Notification.title}</td>
                                 <td className="px-2 py-4 border-b-2 border-blue-200 ">{Notification.message.length > 30
                                     ? Notification.message.slice(0, 30) + "...."
                                     : Notification.message}</td>
                                 <td className={`px-2 py-4 border-b-2 border-blue-200 ${(Notification.curtomer && Notification.driver) ? 'text-cyan-400' : Notification.customer ? 'text-gray-500' : 'text-blue-500'}`}>{(Notification.customer && Notification.driver) ? "Both" : (Notification.driver) ? "Driver" : "Customer"}</td>
-                                <td className="px-2 py-4 border-b-2 border-blue-200 ">{Notification.createdAt}</td>
+                                <td className="px-2 py-4 border-b-2 border-blue-200 ">{Notification.createdAt.split('T')[0]}</td>
 
                                 <td className="px-2 py-4 border-b-2 border-blue-200 ">
                                     <button className="text-blue-600 mx-1" onClick={() => {

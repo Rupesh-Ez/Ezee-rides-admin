@@ -33,6 +33,7 @@ const DriverList = ({ pending }) => {
 
     const [users, setUsers] = useState(drivers);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchText, setSearchText] = useState("");
     const [entriesPerPage, setEntriesPerPage] = useState(10);
     const [displayedUsers, setDisplayedUsers] = useState([]);
     const [selectedDriverDetails, setSelectedDriverDetails] = useState({});
@@ -45,7 +46,7 @@ const DriverList = ({ pending }) => {
         setIsConfirmOpen(false)
     };
 
-    const handleConfirm = async (e)=>{
+    const handleConfirm = async (e) => {
         try {
             const response = await axios.delete(`${BACKEND_API_ENDPOINT}/api/driver/deletedriver`, {
                 data: { _id: selectedDriverDetails._id },
@@ -55,14 +56,14 @@ const DriverList = ({ pending }) => {
                 withCredentials: true,
             });
             if (response.data.success) {
-                setDrivers(prevDrivers => 
+                setDrivers(prevDrivers =>
                     prevDrivers.filter(driver => driver._id !== selectedDriverDetails._id)
                 );
                 alert("Driver Removed Successfully!!")
             } else {
                 alert('Failed to fetch drivers');
             }
-        }catch (error) {
+        } catch (error) {
             alert('An error occurred while fetching drivers');
         } finally {
             closeConfirm();
@@ -101,6 +102,40 @@ const DriverList = ({ pending }) => {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1);
     };
 
+    const handleSearch = async () => {
+        if (!searchText.trim()) {
+            alert('Please enter a number');
+            return;
+        }
+
+        // Check if the input is a valid number
+        if (isNaN(searchText) || !Number.isInteger(Number(searchText)) || searchText.length != 10) {
+            alert('Please enter a valid 10 digit number');
+            return;
+        }
+
+        try {
+            const response = await axios.get(
+                `${BACKEND_API_ENDPOINT}/api/driver/getdriverbyid/${searchText}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true,
+                }
+            );
+
+            setDisplayedUsers([response.data.data]);
+
+            // Clear input after successful search
+            setSearchText('');
+
+        } catch (error) {
+            console.error('Error during search:', error);
+            alert(error.response?.data?.message || 'An error occurred while searching. Please try again.');
+        }
+    }
+
     return (
         <div className="p-6 bg-[#f7f9ff]">
             {isConfirmOpen && (
@@ -138,7 +173,7 @@ const DriverList = ({ pending }) => {
 
                         <div className="flex justify-end p-4 border-t gap-2">
                             <button
-                                className={` text-white px-4 py-2 rounded ${(confirmText !== 'Delete-Driver')?'bg-red-200':'bg-red-500 hover:bg-red-600'}`}
+                                className={` text-white px-4 py-2 rounded ${(confirmText !== 'Delete-Driver') ? 'bg-red-200' : 'bg-red-500 hover:bg-red-600'}`}
                                 onClick={handleConfirm}
                                 disabled={confirmText !== 'Delete-Driver'}
                             >
@@ -159,19 +194,46 @@ const DriverList = ({ pending }) => {
                 <h2 className="text-3xl py-4 font-semibold px-2">Drivers List</h2>
             </div>
             <div className='bg-white py-4 px-2'>
-                <div className="flex items-center mb-4">
-                    <label className="mr-2">Show</label>
-                    <select
-                        value={entriesPerPage}
-                        onChange={handleEntriesChange}
-                        className="border p-2 rounded"
-                    >
-                        <option value={5}>5</option>
-                        <option value={10}>10</option>
-                        <option value={15}>50</option>
-                        <option value={20}>100</option>
-                    </select>
-                    <label className="ml-2">entries</label>
+                <div className='flex justify-between px-5'>
+                    <div className="flex items-center mb-4">
+                        <label className="mr-2">Show</label>
+                        <select
+                            value={entriesPerPage}
+                            onChange={handleEntriesChange}
+                            className="border p-2 rounded"
+                        >
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={15}>50</option>
+                            <option value={20}>100</option>
+                        </select>
+                        <label className="ml-2">entries</label>
+                    </div>
+                    <div className="flex items-center gap-3 p-4">
+                        <input
+                            className="w-64 px-2 py-1 text-lg border-2 border-gray-300 rounded-lg
+                   focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+                   outline-none transition-all duration-200
+                   shadow-sm hover:shadow-md"
+                            type="text"
+                            name="searchText"
+                            id="searchText"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            placeholder="Contact Number"
+                        />
+                        <button
+                            className="px-3 py-1 text-lg font-medium text-white 
+                   bg-blue-500 rounded-lg shadow-sm
+                   hover:bg-blue-600 hover:shadow-md 
+                   active:bg-blue-700 active:shadow-sm
+                   transition-all duration-200"
+                            onClick={handleSearch}
+                        >
+                            Search
+                        </button>
+                    </div>
+
                 </div>
 
                 <table className="w-full border-collapse border border-blue-200">
