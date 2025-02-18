@@ -202,6 +202,7 @@ const RideRequestList = ({ status }) => {
                                         <li><strong>Driver :</strong> {selectedRideDetails.driverName}</li>
                                         <li><strong>Date :</strong> {selectedRideDetails.createdAt?.split("T")[0]}</li>
                                         <li><strong>Time :</strong> {selectedRideDetails.createdAt?.split("T")[1]}</li>
+                                        <li><strong>Payment Mode :</strong> <span className='text-green-500'>{selectedRideDetails.paymentMode}</span></li>
                                         <li><strong>Customer Address :</strong> {selectedRideDetails.currentAddress}</li>
                                         <li><strong>Destination Address :</strong> {selectedRideDetails.destinationAddress}</li>
                                         {/* <li><strong>Invoice :</strong> {selectedRideDetails.Invoice}</li> */}
