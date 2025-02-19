@@ -190,7 +190,7 @@ export const updateNotification = async (req, res) => {
                     : undefined,
     
     
-                large_icon: 'https://drive.google.com/file/d/1lSKsJPSScCNE9KKXUiGBGH37lKHv9ACX/view?usp=sharing'.replace(/\/file\/d\/(.*?)\/view.*/, '/uc?export=view&id=$1')
+                large_icon: 'https://drive.google.com/file/d/1iAE3RWyz78xxP4qiqNauvw9PXQ3I-G8y/view?usp=drive_link'.replace(/\/file\/d\/(.*?)\/view.*/, '/uc?export=view&id=$1')
             };
             if(existingNotification.customer===true){
                 await axios.post('https://onesignal.com/api/v1/notifications', payloadUser, {
