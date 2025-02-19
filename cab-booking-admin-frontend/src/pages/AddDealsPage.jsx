@@ -8,7 +8,7 @@ import BACKEND_API_ENDPOINT from '../utils/constants';
 const AddDealsPage = () => {
     const [formData, setFormData] = useState({
         title: "",
-        image: null,
+        image: "",
     });
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,27 +46,6 @@ const AddDealsPage = () => {
         }
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-
-        if (file) {
-            const allowedTypes = ["image/jpeg", "image/png"];
-            if (!allowedTypes.includes(file.type)) {
-                alert("Only JPEG and PNG files are allowed.");
-                return;
-            }
-            const reader = new FileReader();
-            reader.readAsDataURL(file); 
-
-            reader.onload = () => {
-                setFormData((prev) => ({ ...prev, image: reader.result })); // Store Base64 string
-            };
-
-            reader.onerror = (error) => {
-                console.error("Error converting image to Base64:", error);
-            };
-        }
-    };
 
     return (
         <div className="flex overflow-hidden">
@@ -95,13 +74,13 @@ const AddDealsPage = () => {
                             </div>
                             <div className="flex flex-col">
                                 <label className="font-medium">
-                                    Deal Image<span className="text-red-500">*</span>
+                                    Deal Image Url<span className="text-red-500">*</span>
                                 </label>
                                 <input
-                                    type="file"
+                                    type="text"
                                     name="image"
-                                    accept="image/jpeg, image/png"
-                                    onChange={handleImageChange}
+                                    value={formData.image}
+                                    onChange={handleChange}
                                     className="border border-gray-300 rounded p-2"
                                     required
                                 />
