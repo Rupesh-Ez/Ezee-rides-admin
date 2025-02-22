@@ -77,7 +77,7 @@ export const createService = async (req, res) => {
 
 export const getAllService = async (req, res) => {
     try {
-        const service = await Service.find(); // Fetch all regions
+        const service = await Service.find({}).sort({ createdAt: -1 });
         return res.status(200).json({
             success: true,
             message: 'service fetched successfully',

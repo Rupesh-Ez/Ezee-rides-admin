@@ -105,7 +105,7 @@ export const getCouponCount = async (req, res) => {
 
 export const getAllCoupons = async (req, res) => {
     try {
-        const coupon = await Coupon.find(); // Fetch all regions
+        const coupon = await Coupon.find({}).sort({ createdAt: -1 });
         return res.status(200).json({
             success: true,
             message: 'coupon fetched successfully',

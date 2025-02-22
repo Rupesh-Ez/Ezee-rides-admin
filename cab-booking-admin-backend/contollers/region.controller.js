@@ -46,7 +46,7 @@ export const saveRegion = async (req, res) => {
 
 export const getAllRegions = async (req, res) => {
   try {
-    const regions = await Region.find(); // Fetch all regions
+    const regions = await Region.find({}).sort({ createdAt: -1 });
     return res.status(200).json({
       success: true,
       message: 'Regions fetched successfully',

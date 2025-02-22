@@ -76,7 +76,7 @@ export const saveNotification = async (req, res) => {
 
 export const getAllNotifications = async (req, res) => {
     try {
-        const notifications = await PushNotification.find();
+        const notifications = await PushNotification.find({}).sort({ createdAt: -1 });
 
         return res.status(200).json({
             success: true,

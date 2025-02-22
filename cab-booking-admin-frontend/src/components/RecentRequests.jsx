@@ -60,7 +60,7 @@ const RecentRequests = () => {
               <td className="p-2">
                 <span
                   className={`px-2 py-1 rounded text-sm font-semibold ${
-                    request.status === "confrim" ? "bg-[#4fd69c] text-white" : request.status ==="cancelled" ?" bg-[#f75676] text-white" :"bg-blue-400 text-white"
+                    request.status === "completed" ? "bg-[#4fd69c] text-white" : request.status ==="cancelled" ?" bg-[#f75676] text-white" : request.status === 'booked' ? "bg-yellow-400 text-white" :"bg-blue-400 text-white"
                   }`}
                 >
                   {request.status}
