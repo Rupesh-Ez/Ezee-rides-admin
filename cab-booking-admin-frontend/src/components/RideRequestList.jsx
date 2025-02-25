@@ -360,7 +360,7 @@ const RideRequestList = ({ status }) => {
                                     <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.currentAddress.substring(0, 20)}...</td>
                                     <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.destinationAddress.substring(0, 20)}...</td>
 
-                                    <td className={`px-1 py-4 border-b-2 border-blue-200 ${request.status === 'Cancelled' ? 'text-red-500' : request.status === 'new' ? 'text-blue-500' : request.status === 'booked'? 'text-yellow-400' :  'text-green-500'}`}>{request.status}</td>
+                                    <td className={`px-1 py-4 border-b-2 border-blue-200 ${request.status === 'cancelled' ? 'text-red-500' : request.status === 'new' ? 'text-blue-500' : request.status === 'booked'? 'text-yellow-400' :  'text-green-500'}`}>{request.status}</td>
 
                                     <td className="px-1 py-4 border-b-2 border-blue-200 ">
                                         <button className="text-blue-600 mx-1 font-semibold text-xl" onClick={() => {
