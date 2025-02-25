@@ -197,12 +197,14 @@ const RideRequestList = ({ status }) => {
                                     <h3 className="text-lg font-semibold border-b pb-2">Details</h3>
                                     <ul className="space-y-1 mt-2 grid grid-cols-2 gap-x-10">
                                         <li><strong>ID :</strong> {selectedRideDetails._id}</li>
+                                        <li><strong>Status :</strong> {selectedRideDetails.status}</li>
                                         <li><strong>Customer :</strong> {selectedRideDetails.userName}</li>
+                                        <li><strong>Customer Phone :</strong> {selectedRideDetails.userPhno}</li>
 
                                         <li><strong>Driver :</strong> {selectedRideDetails.driverName}</li>
+                                        <li><strong>Driver Phone :</strong> {selectedRideDetails.driverphno}</li>
                                         <li><strong>Date :</strong> {selectedRideDetails.createdAt?.split("T")[0]}</li>
                                         <li><strong>Time :</strong> {selectedRideDetails.createdAt?.split("T")[1]}</li>
-                                        <li><strong>Status :</strong> {selectedRideDetails.status}</li>
                                         <li><strong>Payment Mode :</strong> <span className='text-blue-500'>{selectedRideDetails.paymentMode}</span></li>
                                         <li><strong>Amount :</strong> <span className='text-green-500'>{selectedRideDetails.price}</span></li>
                                         <li><strong>Customer Address :</strong> {selectedRideDetails.currentAddress}</li>
