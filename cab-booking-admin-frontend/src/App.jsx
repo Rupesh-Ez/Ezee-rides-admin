@@ -35,6 +35,7 @@ import UpdateDriverDocs from './pages/UpdateDriverDocs.jsx';
 import UpdateRegionForm from './components/UpdateRegion.jsx';
 import Deals from './pages/DealsPage.jsx';
 import AddDealsPage from './pages/AddDealsPage.jsx';
+import OnlineDrivers from './pages/OnlineDrivers.jsx';
 
 const libraries = ["places", "drawing"];
 
@@ -65,6 +66,7 @@ function App() {
           <Route path="/service/update/:id" element={<ProtectedRoute><UpdateService /></ProtectedRoute>} />
           <Route path="/driver" element={<ProtectedRoute><Driver /></ProtectedRoute>} />
           <Route path="/driver/pending" element={<ProtectedRoute><PendingDriver /></ProtectedRoute>} />
+          <Route path="/driver/online" element={<ProtectedRoute><OnlineDrivers /></ProtectedRoute>} />
           <Route path="/driver/update/:id" element={<ProtectedRoute><UpdateDriverDocs/></ProtectedRoute>} />
           
           <Route path="/pushnotification" element={<ProtectedRoute><PushNotification /></ProtectedRoute>} />

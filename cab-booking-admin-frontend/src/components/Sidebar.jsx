@@ -181,6 +181,15 @@ const Sidebar = () => {
                 <span>Pending Driver</span>
               </Link>
             </li>
+            <li>
+              <Link
+                to="/driver/online"
+                className="flex items-center space-x-3 p-2 hover:bg-blue-50 hover:text-blue-600 rounded"
+              >
+                <FaList />
+                <span>Online Drivers</span>
+              </Link>
+            </li>
           </ul>
         </li>
         <li>
@@ -255,7 +264,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to="/riderequest/booked"
+                to="/riderequest/completed"
                 className="flex items-center space-x-3 p-2 hover:bg-blue-50 hover:text-blue-600 rounded"
               >
                 <FaList />
@@ -264,7 +273,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to="/riderequest/Cancelled"
+                to="/riderequest/cancelled"
                 className="flex items-center space-x-3 p-2 hover:bg-blue-50 hover:text-blue-600 rounded"
               >
                 <FaList />

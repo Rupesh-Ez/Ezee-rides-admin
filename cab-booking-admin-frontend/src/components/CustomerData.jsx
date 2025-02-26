@@ -309,15 +309,6 @@ const CustomerData = () => {
             )}
             <h1 className='text-3xl py-4 font-semibold border-b-2 border-blue-100 bg-white px-2'>Customer List</h1>
             <div className='bg-white py-4 px-2'>
-                {/* <div className="flex items-center gap-4 mb-4">
-                    <label className="font-semibold">Status(info)</label>
-                    <select className="border p-2 rounded">
-                        <option value="All">All users</option>
-                        <option value="Active">Active users</option>
-                        <option value="Inactive">Inactive users</option>
-                    </select>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
-                </div> */}
                 <div className='flex justify-between px-5'>
                     <div className="flex items-center mb-4">
                         <label className="mr-2">Show</label>

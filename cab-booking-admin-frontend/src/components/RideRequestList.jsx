@@ -197,12 +197,14 @@ const RideRequestList = ({ status }) => {
                                     <h3 className="text-lg font-semibold border-b pb-2">Details</h3>
                                     <ul className="space-y-1 mt-2 grid grid-cols-2 gap-x-10">
                                         <li><strong>ID :</strong> {selectedRideDetails._id}</li>
+                                        <li><strong>Status :</strong> {selectedRideDetails.status}</li>
                                         <li><strong>Customer :</strong> {selectedRideDetails.userName}</li>
+                                        <li><strong>Customer Phone :</strong> {selectedRideDetails.userPhno}</li>
 
                                         <li><strong>Driver :</strong> {selectedRideDetails.driverName}</li>
+                                        <li><strong>Driver Phone :</strong> {selectedRideDetails.driverPhno}</li>
                                         <li><strong>Date :</strong> {selectedRideDetails.createdAt?.split("T")[0]}</li>
                                         <li><strong>Time :</strong> {selectedRideDetails.createdAt?.split("T")[1]}</li>
-                                        <li><strong>Status :</strong> {selectedRideDetails.status}</li>
                                         <li><strong>Payment Mode :</strong> <span className='text-blue-500'>{selectedRideDetails.paymentMode}</span></li>
                                         <li><strong>Amount :</strong> <span className='text-green-500'>{selectedRideDetails.price}</span></li>
                                         <li><strong>Customer Address :</strong> {selectedRideDetails.currentAddress}</li>
@@ -360,7 +362,7 @@ const RideRequestList = ({ status }) => {
                                     <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.currentAddress.substring(0, 20)}...</td>
                                     <td className="px-1 py-4 border-b-2 border-blue-200 ">{request.destinationAddress.substring(0, 20)}...</td>
 
-                                    <td className={`px-1 py-4 border-b-2 border-blue-200 ${request.status === 'Cancelled' ? 'text-red-500' : request.status === 'new' ? 'text-blue-500' : request.status === 'booked'? 'text-yellow-400' :  'text-green-500'}`}>{request.status}</td>
+                                    <td className={`px-1 py-4 border-b-2 border-blue-200 ${request.status === 'cancelled' ? 'text-red-500' : request.status === 'new' ? 'text-blue-500' : request.status === 'booked'? 'text-yellow-400' :  'text-green-500'}`}>{request.status}</td>
 
                                     <td className="px-1 py-4 border-b-2 border-blue-200 ">
                                         <button className="text-blue-600 mx-1 font-semibold text-xl" onClick={() => {

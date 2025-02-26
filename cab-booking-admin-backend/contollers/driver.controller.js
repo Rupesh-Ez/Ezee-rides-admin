@@ -1,10 +1,45 @@
 import mongoose from "mongoose";
+import {io} from 'socket.io-client'
+
+const socket = io('http://145.223.23.193:3000', {
+  transports: ['websocket'],
+  reconnection: true,
+});
+
+let OnlineDrivers = [];
+
+socket.on('driveronline', (driverData) => {
+  // console.log('Driver online:', driverData);
+  if (!OnlineDrivers.find((d) => d.phno === driverData.phno)) {
+    OnlineDrivers.push(driverData);
+  }
+});
+
+socket.on('driveroffline', (driverData) => {
+  // console.log('Driver offline:', driverData);
+  if(driverData.phno!=null){
+    OnlineDrivers = OnlineDrivers.filter((d) => d.phno !== driverData.phno);
+  }
+});
 
 const driverSchema = new mongoose.Schema({}, { strict: false });
 const DriverModel = mongoose.model('Driver', driverSchema, 'Drivers');
 
 const fileSchema = new mongoose.Schema({}, { strict: false });
 const FileModel = mongoose.model('Files', fileSchema, 'Files');
+
+export const getOnlineDrivers = async (req,res) =>{
+  try {
+    return res.status(200).json({
+      success: true,
+      message: 'drivers fetched successfully',
+      data: OnlineDrivers,
+    });
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
 
 export const getAllDrivers = async (req, res) => {
   try {
@@ -298,5 +333,7 @@ export const deleteDriver = async (req, res) => {
     });
   }
 };
+
+
 
 export default DriverModel;
