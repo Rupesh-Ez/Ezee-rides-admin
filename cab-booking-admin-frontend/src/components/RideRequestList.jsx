@@ -198,10 +198,13 @@ const RideRequestList = ({ status }) => {
                                     <ul className="space-y-1 mt-2 grid grid-cols-2 gap-x-10">
                                         <li><strong>ID :</strong> {selectedRideDetails._id}</li>
                                         <li><strong>Status :</strong> {selectedRideDetails.status}</li>
+                                        <li><strong>Status :</strong> {selectedRideDetails.status}</li>
                                         <li><strong>Customer :</strong> {selectedRideDetails.userName}</li>
+                                        <li><strong>Customer Phone :</strong> {selectedRideDetails.userPhno}</li>
                                         <li><strong>Customer Phone :</strong> {selectedRideDetails.userPhno}</li>
 
                                         <li><strong>Driver :</strong> {selectedRideDetails.driverName}</li>
+                                        <li><strong>Driver Phone :</strong> {selectedRideDetails.driverphno}</li>
                                         <li><strong>Driver Phone :</strong> {selectedRideDetails.driverPhno}</li>
                                         <li><strong>Date :</strong> {selectedRideDetails.createdAt?.split("T")[0]}</li>
                                         <li><strong>Time :</strong> {selectedRideDetails.createdAt?.split("T")[1]}</li>
