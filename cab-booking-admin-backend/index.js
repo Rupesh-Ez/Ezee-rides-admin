@@ -18,6 +18,8 @@ import WithdrawRoute from './routes/withdraw.route.js'
 import DealRoute from './routes/deals.route.js'
 import fileUpload from 'express-fileupload';
 import path from 'path'
+import { Server } from 'socket.io';
+import http from 'http';
 
 dotenv.config({})
 
@@ -25,40 +27,54 @@ const app = express();
 
 const _dirname = path.resolve();
 
-
 app.use(fileUpload());
 app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 const coreOptions = {
     origin:'https://ezee-rides-admin.onrender.com',
-    // origin:'http://localhost:5173',
-    credentials:true
+    // origin: 'http://localhost:5173',
+    credentials: true
 }
 app.use(cors(coreOptions))
 
-const PORT = process.env.PORT ||8000;
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: { origin: '*' },
+});
 
-app.use("/api/admin",adminRoute);
-app.use("/api/region",regionRoute);
-app.use("/api/service",serviceRoute);
-app.use("/api/coupon",couponRoute);
-app.use("/api/terms",termsRoute);
-app.use("/api/privacypolicy",policyRoute);
-app.use("/api/pushnotification",NotificationRoute);
-app.use("/api/driver",DriverRoute);
-app.use("/api/customer",CustomerRoute);
-app.use("/api/rides",RidesRoute);
-app.use("/api/complaint",ComplaintsRoute);
-app.use("/api/withdraw",WithdrawRoute);
-app.use("/api/deals",DealRoute);
+io.on('connection', (socket) => {
+    console.log('Admin Panel Connected:', socket.id);
+
+    socket.on('disconnect', () => {
+        console.log('Admin Panel Disconnected:', socket.id);
+    });
+});
+
+const PORT = process.env.PORT || 8000;
+
+app.use("/api/admin", adminRoute);
+app.use("/api/region", regionRoute);
+app.use("/api/service", serviceRoute);
+app.use("/api/coupon", couponRoute);
+app.use("/api/terms", termsRoute);
+app.use("/api/privacypolicy", policyRoute);
+app.use("/api/pushnotification", NotificationRoute);
+app.use("/api/driver", DriverRoute);
+app.use("/api/customer", CustomerRoute);
+app.use("/api/rides", RidesRoute);
+app.use("/api/complaint", ComplaintsRoute);
+app.use("/api/withdraw", WithdrawRoute);
+app.use("/api/deals", DealRoute);
 
 app.use(express.static(path.join(_dirname,"/cab-booking-admin-frontend/dist")))
 app.get('*',(_,res)=>{
     res.sendFile(path.resolve(_dirname,"cab-booking-admin-frontend","dist","index.html"));
 })
 
-app.listen(PORT,()=>{
-    connectDB()
-    console.log(`server is running on ${PORT}`)
-})
+server.listen(PORT, async () => {
+    await connectDB();
+    console.log(`Server is running on port ${PORT}`);
+});
+
+export { io, server };

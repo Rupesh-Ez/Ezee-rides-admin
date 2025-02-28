@@ -135,7 +135,7 @@ const AddPushNotificationForm = () => {
 
 
                     {/* Schedule */}
-                    {/* <div>
+                    <div>
                         <div>
                             <label className="text-md font-medium mb-1">
                                 Schedule? <span className="text-red-500">*</span>
@@ -216,7 +216,7 @@ const AddPushNotificationForm = () => {
                                 </div>
                             </div>
                         </div>
-                    </div> */}
+                    </div>
 
                     {/* Add Image */}
                     <div className="flex gap-4 items-center">

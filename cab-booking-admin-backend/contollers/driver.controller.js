@@ -1,24 +1,30 @@
 import mongoose from "mongoose";
-import {io} from 'socket.io-client'
+import { io as appSocket } from 'socket.io-client';
+import { io } from '../index.js';
 
-const socket = io('http://145.223.23.193:3000', {
+const appSocketClient = appSocket('http://145.223.23.193:3000', {
   transports: ['websocket'],
   reconnection: true,
 });
 
+appSocketClient.off('driveronline');
+appSocketClient.off('driveroffline');
+
 let OnlineDrivers = [];
 
-socket.on('driveronline', (driverData) => {
+appSocketClient.on('driveronline', (driverData) => {
   // console.log('Driver online:', driverData);
   if (!OnlineDrivers.find((d) => d.phno === driverData.phno)) {
     OnlineDrivers.push(driverData);
+    io.emit('sendOnlineDrivers', OnlineDrivers);
   }
 });
 
-socket.on('driveroffline', (driverData) => {
+appSocketClient.on('driveroffline', (driverData) => {
   // console.log('Driver offline:', driverData);
   if(driverData.phno!=null){
     OnlineDrivers = OnlineDrivers.filter((d) => d.phno !== driverData.phno);
+    io.emit('sendOnlineDrivers', OnlineDrivers);
   }
 });
 

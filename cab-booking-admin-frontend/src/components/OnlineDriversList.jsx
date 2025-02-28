@@ -1,31 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import BACKEND_API_ENDPOINT from '../utils/constants.js'
+import { io } from 'socket.io-client';
+
+const socket = io(BACKEND_API_ENDPOINT);
 
 const OnlineDriverList = () => {
-
     useEffect(() => {
-        const fetchDrivers = async () => {
-            try {
-                const response = await axios.get(`${BACKEND_API_ENDPOINT}/api/driver/get-online-drivers`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    withCredentials: true,
-                });
-                if (response.data.success) {
-                    setUsers(response.data.data);
+        try {
+            socket.on('sendOnlineDrivers', (updatedDrivers) => {
+                setUsers(updatedDrivers);
+            });
+            return () => {
+                socket.off('sendOnlineDrivers');
+            };
+        } catch (error) {
+            alert('An error occurred while fetching drivers');
+        }
 
-                } else {
-                    alert('Failed to fetch drivers');
-                }
-            } catch (error) {
-                alert('An error occurred while fetching drivers');
-            }
-        };
-
-        fetchDrivers();
-        
     }, []);
 
     const [users, setUsers] = useState([]);
@@ -91,7 +83,7 @@ const OnlineDriverList = () => {
                             <th className="py-6 px-2 border-b-2 border-blue-200">No</th>
                             <th className="py-6 px-2 border-b-2 border-blue-200">Name</th>
                             <th className="py-6 px-2 border-b-2 border-blue-200">Contact No</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody>
