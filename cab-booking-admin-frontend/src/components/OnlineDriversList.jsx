@@ -1,23 +1,40 @@
 import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import BACKEND_API_ENDPOINT from '../utils/constants.js'
 import { io } from 'socket.io-client';
 
-const socket = io(BACKEND_API_ENDPOINT);
+const socket = io(BACKEND_API_ENDPOINT, {
+    transports: ['websocket'],
+    reconnection: true,
+});
 
 const OnlineDriverList = () => {
     useEffect(() => {
-        try {
-            socket.on('sendOnlineDrivers', (updatedDrivers) => {
-                setUsers(updatedDrivers);
-            });
-            return () => {
-                socket.off('sendOnlineDrivers');
-            };
-        } catch (error) {
-            alert('An error occurred while fetching drivers');
-        }
+        const fetchOnlineDrivers = async () => {
+            try {
+                const response = await axios.get(`${BACKEND_API_ENDPOINT}/api/driver/get-online-drivers`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true,
+                });
+                if(response.data.success){
+                    setUsers(response.data.data || []);
+                }else{
+                    alert("failed to fetch drivers");
+                }
+            } catch (error) {
+                console.error('Failed to fetch online drivers', error);
+            }
+        };
 
+        fetchOnlineDrivers();
+        socket.on('sendOnlineDrivers', (updatedDrivers) => {
+            setUsers(updatedDrivers);
+        });
+        return () => {
+            socket.off('sendOnlineDrivers');
+        };
     }, []);
 
     const [users, setUsers] = useState([]);
