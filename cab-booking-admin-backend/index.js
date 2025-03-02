@@ -31,17 +31,37 @@ app.use(fileUpload());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
+
+const allowedOrigins = [
+    'https://apps.ezeeriders.in',
+    'http://apps.ezeeriders.in',
+    'http://145.223.23.193'
+];
+
 const coreOptions = {
-    origin:'https://ezee-rides-admin.onrender.com',
-    // origin: 'http://localhost:5173',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
-}
+};
+
 app.use(cors(coreOptions))
 
 const server = http.createServer(app);
+
 const io = new Server(server, {
-    cors: { origin: '*' },
+    cors: {
+        origin: ["http://apps.ezeeriders.in", "https://apps.ezeeriders.in","http://145.223.23.193"],
+        methods: ["GET", "POST"],
+        credentials: true
+    },
+    transports: ["websocket", "polling"]
 });
+
 
 io.on('connection', (socket) => {
     console.log('Admin Panel Connected:', socket.id);
@@ -67,10 +87,10 @@ app.use("/api/complaint", ComplaintsRoute);
 app.use("/api/withdraw", WithdrawRoute);
 app.use("/api/deals", DealRoute);
 
-app.use(express.static(path.join(_dirname,"/cab-booking-admin-frontend/dist")))
-app.get('*',(_,res)=>{
-    res.sendFile(path.resolve(_dirname,"cab-booking-admin-frontend","dist","index.html"));
-})
+//app.use(express.static(path.join(_dirname,"/cab-booking-admin-frontend/dist")))
+//app.get('*',(_,res)=>{
+//    res.sendFile(path.resolve(_dirname,"cab-booking-admin-frontend","dist","index.html"));
+//})
 
 server.listen(PORT, async () => {
     await connectDB();
