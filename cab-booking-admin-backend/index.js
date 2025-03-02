@@ -35,7 +35,8 @@ app.use(cookieParser())
 const allowedOrigins = [
     'https://apps.ezeeriders.in',
     'http://apps.ezeeriders.in',
-    'http://145.223.23.193'
+    'http://145.223.23.193',
+    'http://localhost:5173'
 ];
 
 const coreOptions = {
@@ -56,7 +57,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: ["http://apps.ezeeriders.in", "https://apps.ezeeriders.in","http://145.223.23.193"],
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true
     },
     transports: ["websocket", "polling"]
