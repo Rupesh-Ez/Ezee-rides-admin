@@ -4,8 +4,11 @@ import BACKEND_API_ENDPOINT from '../utils/constants.js'
 import { io } from 'socket.io-client';
 
 const socket = io(BACKEND_API_ENDPOINT, {
-    transports: ['websocket'],
-    reconnection: true,
+    transports: ['websocket', 'polling'],  // ✅ Add "polling" as a fallback
+    withCredentials: true,  // ✅ Allow cross-origin credentials
+    reconnection: true,  
+    reconnectionAttempts: 5,  // ✅ Limit reconnection attempts
+    reconnectionDelay: 3000,  // ✅ Wait 3s before reconnecting
 });
 
 const OnlineDriverList = () => {

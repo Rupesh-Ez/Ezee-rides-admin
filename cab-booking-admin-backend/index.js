@@ -20,6 +20,7 @@ import fileUpload from 'express-fileupload';
 import path from 'path'
 import { Server } from 'socket.io';
 import http from 'http';
+import fs from 'fs';
 
 dotenv.config({})
 
@@ -56,11 +57,12 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: ["http://apps.ezeeriders.in", "https://apps.ezeeriders.in","http://145.223.23.193"],
+        origin: ["http://apps.ezeeriders.in"],
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true
     },
-    transports: ["websocket", "polling"]
+    transports: ["websocket", "polling"],
+    allowEIO3: true
 });
 
 
